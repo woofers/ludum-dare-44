@@ -2,7 +2,7 @@
 import GameObject from require "gameobject"
 require "pico"
 export engine = require "engine"
-import Ship from require "ship"
+import Player from require "player"
 import Stars from require "stars"
 
 class Play extends GameObject
@@ -11,7 +11,7 @@ class Play extends GameObject
 
   create: () =>
     engine.init_3d!
-    @ship = Ship!
+    @ship = Player!
     @stars = Stars!
 
   destroy: () =>
