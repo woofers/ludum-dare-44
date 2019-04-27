@@ -31,8 +31,12 @@ class Play
     @stars\render(dt)
     engine.draw_3d!
     @ship\render(dt)
+    @draw_life!
 
-    print("life", 10, 3, 7)
-    sspr(8, 0, 8 * 4, 8, 8, 10)
+  draw_life: (x=8, y=10, width=32, height=8) =>
+    print("life", x + 2, y - 7, 7)
+    pico.draw_rectangle(x, y, width, height, 7)
+    pico.draw_rectangle(x + 1, y + 1, width - 2, height - 2, 0)
+    pico.draw_rectangle(x + 2, y + 2, width - 4, height - 4, 8)
 
 {:Play}
