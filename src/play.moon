@@ -14,12 +14,14 @@ class Play extends GameObject
     engine.init_3d!
     @ship = Player!
     @other = Ship(2)
-    @other.z = 5
+    @other.model.z = -25
     @stars = Stars!
 
   destroy: () =>
 
   update: (dt) =>
+    @other.model.z += 0.1
+    @other.model.ax += 0.01
     @stars\update(dt)
     @ship\update(dt)
     engine.update_camera!
