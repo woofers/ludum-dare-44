@@ -13,7 +13,6 @@ class Star extends Sprite
     @buffer = 10
 
   update: (dt) =>
-    super\update(dt)
     @x += @direction.x * pico.random(0, 15)
     @y += @direction.y * pico.random(0, 15)
     @height = pico.random(0, 2)
@@ -27,7 +26,6 @@ class Star extends Sprite
       @y = pico.random(@buffer, pico.screen_size - 1)
 
   render: (dt) =>
-    super\render(dt)
     pico.draw_rectangle(@x, @y, @width, @height, @color)
 
 {:Star}

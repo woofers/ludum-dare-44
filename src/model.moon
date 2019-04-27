@@ -1,8 +1,7 @@
-import GameObject from require "gameobject"
 export engine = require "engine"
 require "pico"
 
-class Model extends GameObject
+class Model
   new: (v, f, @color) =>
     @v = engine.read_vector_string(v)
     @f = engine.read_face_string(f)

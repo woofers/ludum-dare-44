@@ -1,11 +1,8 @@
 
 require "pico"
 
-import GameObject from require "gameobject"
-
-class Sprite extends GameObject
+class Sprite
   new: (@x, @y, @width, @height) =>
-    super!
     @x = @x or 0
     @y = @y or 0
     @\set_location(@x, @y)

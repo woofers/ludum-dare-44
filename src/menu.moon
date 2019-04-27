@@ -1,10 +1,8 @@
 
-import GameObject from require "gameobject"
 require "pico"
 
-class Menu extends GameObject
+class Menu
   new: (@game_states) =>
-    super!
 
   create: () =>
 

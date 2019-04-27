@@ -7,7 +7,6 @@
   "gfxDependencies": {},
   "dependencies": {
     "pico": "src/pico.moon",
-    "gameobject": "src/gameobject.moon",
     "stack": "src/stack.moon",
     "sprite": "src/sprite.moon",
     "star": "src/star.moon",
