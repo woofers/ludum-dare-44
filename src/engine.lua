@@ -1000,14 +1000,23 @@ function stop_timer()
     return stat(1)-timer_value
 end
 
+function camera()
+    return player
+end
+
 return {
    init_player = init_player,
    update_player = update_player,
    update_camera = update_camera,
+   handle_buttons = handle_buttons,
    init_3d = init_3d,
    update_3d = update_3d,
    draw_3d = draw_3d,
    read_vector_string = read_vector_string,
    read_face_string = read_face_string,
-   load_object = load_object
+   load_object = load_object,
+   matrix_inverse = matrix_inverse,
+   camera_matrix_transform = camera_matrix_transform,
+   rotate_point = rotate_point,
+   camera = camera
 }

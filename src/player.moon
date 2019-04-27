@@ -13,10 +13,10 @@ class Player extends Ship
 
   update: (dt) =>
     @holo\update(dt)
-    if (btn(pico.up)) then @model.ax -= .01
-    if (btn(pico.down)) then @model.ax += .01
-    if (btn(pico.left)) then @model.ay += .01
-    if (btn(pico.right)) then @model.ay -= .01
-    if (btn(pico.z_key)) then @model.az += .01
+    speed = .0025
+    if (btn(pico.left)) then engine.camera!.ay -= speed
+    if (btn(pico.right)) then engine.camera!.ay += speed
+    if (btn(pico.down)) then engine.camera!.ax -= speed
+    if (btn(pico.up)) then engine.camera!.ax += speed
 
 {:Player}
