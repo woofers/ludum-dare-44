@@ -14,6 +14,7 @@ class Play
     @other = Ship(2)
     @other.model.z = -25
     @stars = Stars!
+    @health = 1
 
   destroy: () =>
 
@@ -31,12 +32,15 @@ class Play
     @stars\render(dt)
     engine.draw_3d!
     @ship\render(dt)
+    @health -= 0.01
     @draw_life!
 
   draw_life: (x=8, y=10, width=32, height=8) =>
+    bar = (width - 4) * @health
+    if (bar <= -1) then bar = -1
     print("life", x + 2, y - 7, 7)
     pico.draw_rectangle(x, y, width, height, 7)
     pico.draw_rectangle(x + 1, y + 1, width - 2, height - 2, 0)
-    pico.draw_rectangle(x + 2, y + 2, width - 4, height - 4, 8)
+    if (bar > 0) then pico.draw_rectangle(x + 2, y + 2, bar, height - 4, 8)
 
 {:Play}
