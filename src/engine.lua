@@ -388,11 +388,6 @@ function new_object()
 
     object.render=true
     object.background=false
-    object.collision_x=true
-    object.collision_y=false
-    object.collision_down=false
-    object.collision_up=false
-    object.collision_left=false
     object.ring=false
 
     object.min_x=100
@@ -407,8 +402,6 @@ function new_object()
     object.vy=0
     object.vz=0
 
-    object.age=0
-    object.health=2
     add(object_list,object)
     return object
 
