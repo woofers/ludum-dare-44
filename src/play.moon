@@ -1,19 +1,28 @@
 
 import GameObject from require "gameobject"
 require "pico"
+export engine = require "engine"
+import Fox from require "fox"
 
 class Play extends GameObject
   new: (@game_states) =>
     super!
 
   create: () =>
+    engine.init_3d!
+    @fox = Fox!
 
   destroy: () =>
 
   update: (dt) =>
+    @fox\update(dt)
+    engine.update_camera!
+    engine.update_player!
+    engine.update_3d!
 
   render: (dt) =>
     pico.bg(5)
+    engine.draw_3d!
     print("this is the game", 17, 105, 7)
 
   render_debug: (dt) =>

@@ -12,6 +12,7 @@
     "menu": "src/menu.moon",
     "play": "src/play.moon",
     "engine": "src/engine.lua",
+    "fox": "src/fox.moon",
     "main": "src/main.moon"
   }
 }
