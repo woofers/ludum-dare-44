@@ -20,7 +20,6 @@ class Play extends GameObject
     @stars\update(dt)
     @ship\update(dt)
     engine.update_camera!
-    engine.update_player!
     engine.update_3d!
 
   render: (dt) =>
