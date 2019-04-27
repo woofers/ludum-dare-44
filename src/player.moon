@@ -39,6 +39,11 @@ class Player extends Ship
       if (@model.ax > bound) then
         @set_children("ax", bound)
 
+    if (pico.is_held(pico.x_key)) then
+      @holo.model.x = 0
+    else
+      @holo.model.x = 100
+
 
   inc_children: (key, increment) =>
     for _, child in pairs(@children)
