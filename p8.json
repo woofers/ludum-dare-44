@@ -16,6 +16,7 @@
     "menu": "src/menu.moon",
     "play": "src/play.moon",
     "engine": "src/engine.lua",
+    "holo": "src/holo.moon",
     "ship": "src/ship.moon",
     "player": "src/player.moon",
     "main": "src/main.moon"
