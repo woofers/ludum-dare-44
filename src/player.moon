@@ -47,11 +47,20 @@ class Player extends Ship
         @set_children("ax", bound)
 
     if (pico.is_held(pico.x_key)) then
-      @holo.model.x = 0
+      @holo\show!
     else
-      @holo.model.x = 100
+      @holo\hide!
+
     @inc_children("x", @x)
     @inc_children("y", @y)
+    upper_bound = 13.5237
+    lower_bound = -1.7895
+    if (@model.y > upper_bound) then @set_children("y", upper_bound)
+    if (@model.y < lower_bound) then @set_children("y", lower_bound)
+    upper_bound = 4
+    lower_bound = -4.3033
+    if (@model.x > upper_bound) then @set_children("x", upper_bound)
+    if (@model.x < lower_bound) then @set_children("x", lower_bound)
 
   inc_children: (key, increment) =>
     for _, child in pairs(@children)
@@ -62,8 +71,10 @@ class Player extends Ship
       child[key] = increment
 
   render: (dt) =>
-    print("X: #{@model.ax}", 17, 105, 9)
-    print("Y: #{@model.ay}", 17, 110, 9)
-    print("Z: #{@model.az}", 17, 115, 9)
+    print("X: #{@model.x}", 17, 105, 9)
+    print("Y: #{@model.y}", 17, 110, 9)
+    print("Z: #{@model.z}", 17, 115, 9)
+    print("DX: #{@x}", 75, 105, 9)
+    print("DY: #{@y}", 75, 110, 9)
 
 {:Player}
