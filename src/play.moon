@@ -34,4 +34,7 @@ class Play extends GameObject
     engine.draw_3d!
     @ship\render(dt)
 
+    print("life", 10, 3, 7)
+    sspr(8, 0, 8 * 4, 8, 8, 10)
+
 {:Play}
