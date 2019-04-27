@@ -7,12 +7,19 @@ class Player extends Ship
   new: () =>
     @holo = Holo!
     super(13)
+    @front = .2498
+    @mid = -.07
     @model.y = 5
-    @model.ax = -.07
-    @model.ay = .2498
+    @model.ax = @mid
+    @model.ay = @front
     @children = {@model, @holo.model}
 
+  calc_direction: () =>
+    @x = -(@front - @model.ay)
+    @y = @mid - @model.ax
+
   update: (dt) =>
+    @calc_direction!
     @holo\update(dt)
     speed = .004
     if (btn(pico.left)) then
@@ -43,7 +50,8 @@ class Player extends Ship
       @holo.model.x = 0
     else
       @holo.model.x = 100
-
+    @inc_children("x", @x)
+    @inc_children("y", @y)
 
   inc_children: (key, increment) =>
     for _, child in pairs(@children)
