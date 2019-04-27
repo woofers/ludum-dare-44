@@ -2,7 +2,7 @@
 import GameObject from require "gameobject"
 require "pico"
 export engine = require "engine"
-import Fox from require "fox"
+import Ship from require "ship"
 
 class Play extends GameObject
   new: (@game_states) =>
@@ -10,12 +10,12 @@ class Play extends GameObject
 
   create: () =>
     engine.init_3d!
-    @fox = Fox!
+    @ship = Ship!
 
   destroy: () =>
 
   update: (dt) =>
-    @fox\update(dt)
+    @ship\update(dt)
     engine.update_camera!
     engine.update_player!
     engine.update_3d!

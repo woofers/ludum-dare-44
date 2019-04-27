@@ -9,10 +9,11 @@
     "pico": "src/pico.moon",
     "gameobject": "src/gameobject.moon",
     "stack": "src/stack.moon",
+    "model": "src/model.moon",
     "menu": "src/menu.moon",
     "play": "src/play.moon",
     "engine": "src/engine.lua",
-    "fox": "src/fox.moon",
+    "ship": "src/ship.moon",
     "main": "src/main.moon"
   }
 }
