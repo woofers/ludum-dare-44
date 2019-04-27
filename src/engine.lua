@@ -952,5 +952,6 @@ return {
    matrix_inverse = matrix_inverse,
    camera_matrix_transform = camera_matrix_transform,
    rotate_point = rotate_point,
-   camera = camera
+   camera = camera,
+   project_point = project_point
 }

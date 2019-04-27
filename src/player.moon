@@ -14,6 +14,7 @@ class Player extends Ship
     @model.ay = @front
     @children = {self, @holo}
     @set_defaults!
+    @projection = {x: 0, y: 0}
 
   calc_direction: () =>
     @x = -(@front - @model.ay)
@@ -21,6 +22,8 @@ class Player extends Ship
     if (@y > 0) then @y *= 3
 
   update: (dt) =>
+    @projection = {}
+    @projection.x, @projection.y = engine.project_point(@model.tx, @model.ty, @model.tz)
     @calc_direction!
     @holo\update(dt)
     speed = .004
@@ -76,11 +79,12 @@ class Player extends Ship
       child\set(key, value + offset)
 
   render: (dt) =>
+    pico.draw_rectangle(@projection.x, @projection.y, 0, 0, 14)
     print("X: #{@model.x}", 17, 105, 9)
     print("Y: #{@model.y}", 17, 110, 9)
     print("Z: #{@model.z}", 17, 115, 9)
-    print("DX: #{@x}", 75, 105, 9)
-    print("DY: #{@y}", 75, 110, 9)
+    print("PX: #{@projection.x}", 75, 105, 9)
+    print("PY: #{@projection.y}", 75, 110, 9)
 
   direction_x: () => @x
   direction_y: () => @y
