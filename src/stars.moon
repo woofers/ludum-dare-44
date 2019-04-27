@@ -5,7 +5,7 @@ require "pico"
 class Stars extends Sprite
   new: () =>
     super(0, 0, pico.screen_size, pico.screen_size)
-    amount = 80
+    amount = 50
     max_height = 0
     min_height = @height - 1
     min_width = 0
@@ -23,4 +23,9 @@ class Stars extends Sprite
     for i = 1, #@stars
       @stars[i]\render(dt)
 
+  set_direction: (x, y) =>
+    for i = 1, #@stars
+      @stars[i].direction = {}
+      @stars[i].direction.x = x
+      @stars[i].direction.y = y
 {:Stars}

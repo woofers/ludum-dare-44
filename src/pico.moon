@@ -36,6 +36,9 @@ draw_rectangle = (x, y, width, height, color, border, border_color) ->
 bg = (color) ->
   draw_rectangle(0, 0, screen_size - 1, screen_size - 1, color)
 
+random_decimal = (min, max) ->
+  min + rnd(max - min)
+
 random = (min, max) ->
   min + flr(rnd(max - min))
 
@@ -91,6 +94,7 @@ update_keys = () ->
  :bg,
  :draw_sprite,
  :draw_rectangle,
+ :random_decimal,
  :random,
  :flag_get,
  :round,

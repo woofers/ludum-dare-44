@@ -21,9 +21,10 @@ class Play extends GameObject
 
   update: (dt) =>
     @other.model.z += 0.1
-    @other.model.ax += 0.01
+    @other.model.x += 0.1
     @stars\update(dt)
     @ship\update(dt)
+    @stars\set_direction(@ship\direction_x!, @ship\direction_y!)
     engine.update_camera!
     engine.update_3d!
 
@@ -32,25 +33,5 @@ class Play extends GameObject
     @stars\render(dt)
     engine.draw_3d!
     @ship\render(dt)
-
-  render_debug: (dt) =>
-    cpu = stat(1)
-    mem = stat(0)
-    cpu_color = 6
-    mem_color = 6
-    unless min_mem
-      export min_mem = 9999
-      export max_mem = 0
-
-    if (mem < min_mem) then min_mem = mem
-    if (mem > max_mem) then max_mem = mem
-
-    if (cpu > 0.8) then cpu_color = 12
-    if (mem > 250) then mem_color = 12
-
-    print("cpu "..cpu, @level.current_room.x * pico.screen_size + 32, @level.current_room.y * pico.screen_size + 8, cpu_color)
-    print("mem "..mem, @level.current_room.x * pico.screen_size + 32, @level.current_room.y * pico.screen_size + 16, mem_color)
-    print("mem min "..min_mem, @level.current_room.x * pico.screen_size + 32, @level.current_room.y * pico.screen_size + 24, 6)
-    print("mem max "..max_mem, @level.current_room.x * pico.screen_size + 32, @level.current_room.y * pico.screen_size + 32, 6)
 
 {:Play}

@@ -86,4 +86,7 @@ class Player extends Ship
     print("DX: #{@x}", 75, 105, 9)
     print("DY: #{@y}", 75, 110, 9)
 
+  direction_x: () => @x
+  direction_y: () => @y
+
 {:Player}
