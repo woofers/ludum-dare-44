@@ -21,9 +21,9 @@ class Play extends GameObject
     engine.update_3d!
 
   render: (dt) =>
-    pico.bg(5)
+    pico.bg(0)
     engine.draw_3d!
-    print("this is the game", 17, 105, 7)
+    print("this is the game", 17, 105, 9)
 
   render_debug: (dt) =>
     cpu = stat(1)

@@ -14,7 +14,7 @@ class Menu extends GameObject
     if (btn(pico.x_key)) then @game_states\pop()
 
   render: (dt) =>
-    pico.bg(8)
-    print("this is the menu", 17, 105, 7)
+    pico.bg(1)
+    print("alien expansion", 17, 105, 9)
 
 {:Menu}
