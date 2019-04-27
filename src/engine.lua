@@ -2,6 +2,7 @@
 ----Electric Gryphon's 3D Library----
 ----https://github.com/electricgryphon/Pico-8-Gryphon-3D-Engine-Library----
 ----From https://www.lexaloffle.com/bbs/?tid=28077----
+----NOTE: Modified to reduce token usage----
 
 hex_string_data = "0123456789abcdef"
 char_to_hex = {}
@@ -778,38 +779,6 @@ function lerp(a,b,alpha)
   return a*(1.0-alpha)+b*alpha
 end
 
-function handle_buttons()
-
-    if(btn(0))then
-        player.ay+=-.01
-    end
-
-    if(btn(1))then
-        player.ay+=.01
-    end
-
-    generate_matrix_transform(cam_ax,cam_ay,cam_az)
-    matrix_inverse()
-    vx,vy,vz=rotate_point(0,0,.2)
-
-    if(btn(2))then
-
-        player.vx=-vx
-        player.vy=-vy
-        player.vz=-vz
-
-
-    end
-
-    if(btn(3))then
-
-        player.vx=vx
-        player.vy=vy
-        player.vz=vz
-    end
-
-end
-
 function init_player()
     player=new_object()
     player.min_x=-4.5
@@ -829,33 +798,6 @@ function init_player()
 end
 
 k_friction=.7
-function update_player()
-
-    old_x=player.x
-    old_y=player.y
-    old_z=player.z
-
-
-
-    player.y+=player.vy
-
-
-
-    player.x+=player.vx
-    for object in all(obstacle_list) do
-        if( intersect_bounding_box(player, object)) player.vx=0 player.x=old_x
-    end
-    player.z+=player.vz
-    for object in all(obstacle_list) do
-        if( intersect_bounding_box(player, object)) player.vz=0 player.z=old_z
-    end
-
-
-    player.vx*=k_friction
-    player.vy*=k_friction
-    player.vz*=k_friction
-end
-
 function update_camera()
     cam_x=player.x
     cam_y=player.y
@@ -873,7 +815,6 @@ function init_3d()
     init_light()
     object_list={}
     obstacle_list={}
-    particle_list={}
 end
 
 function update_3d()
