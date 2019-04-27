@@ -71,12 +71,8 @@ class Player extends Ship
   set_children: (key, value) =>
     for _, child in pairs(@children)
       offset = 0
-      if (child == self) then
-        if (@defaults[key]) then
-          offset = -@defaults[key]
-      else
-        if (@defaults[key]) then
-          offset = -@defaults[key]
+      if (@defaults[key]) then
+        offset = -@defaults[key]
       child\set(key, value + offset)
 
   render: (dt) =>
