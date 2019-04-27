@@ -34,6 +34,7 @@ class Play
     @ship\render(dt)
     @health -= 0.01
     @draw_life!
+    @draw_abduct!
 
   draw_life: (x=8, y=10, width=32, height=8) =>
     bar = (width - 4) * @health
@@ -42,5 +43,9 @@ class Play
     pico.draw_rectangle(x, y, width, height, 7)
     pico.draw_rectangle(x + 1, y + 1, width - 2, height - 2, 0)
     if (bar > 0) then pico.draw_rectangle(x + 2, y + 2, bar, height - 4, 8)
+
+  draw_abduct: (x=50, y=10) =>
+    print("score", x + 2, y - 7, 7)
+    print("123", x + 2, y, 7)
 
 {:Play}
