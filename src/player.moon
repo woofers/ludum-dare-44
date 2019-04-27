@@ -12,7 +12,8 @@ class Player extends Ship
     @model.y = 5
     @model.ax = @mid
     @model.ay = @front
-    @children = {@model, @holo.model}
+    @children = {self, @holo}
+    @set_defaults!
 
   calc_direction: () =>
     @x = -(@front - @model.ay)
@@ -65,11 +66,18 @@ class Player extends Ship
 
   inc_children: (key, increment) =>
     for _, child in pairs(@children)
-      child[key] += increment
+      child\inc(key, increment)
 
-  set_children: (key, increment) =>
+  set_children: (key, value) =>
     for _, child in pairs(@children)
-      child[key] = increment
+      offset = 0
+      if (child == self) then
+        if (@defaults[key]) then
+          offset = -@defaults[key]
+      else
+        if (@defaults[key]) then
+          offset = -@defaults[key]
+      child\set(key, value + offset)
 
   render: (dt) =>
     print("X: #{@model.x}", 17, 105, 9)
