@@ -4,14 +4,14 @@
   "author": "jaxson",
   "main": "main.lua",
   "description": "",
-  "gfxDependencies": {
-  },
+  "gfxDependencies": {},
   "dependencies": {
     "pico": "src/pico.moon",
     "gameobject": "src/gameobject.moon",
     "stack": "src/stack.moon",
     "menu": "src/menu.moon",
     "play": "src/play.moon",
+    "engine": "src/engine.lua",
     "main": "src/main.moon"
   }
 }
