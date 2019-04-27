@@ -45,6 +45,35 @@ round = (num) ->
 mod = (a, b) ->
   a - flr(a / b) * b
 
+-- Adapted from https://www.lexaloffle.com/bbs/?tid=3367
+keys={}
+
+is_held = (k) ->
+  band(keys[k], 1) == 1
+
+is_pressed = (k) ->
+  band(keys[k], 2) == 2
+
+is_released = (k) ->
+  band(keys[k], 4) == 4
+
+update_key = (k) ->
+  if keys[k] == 0 then
+    if btn(k) then keys[k] = 3
+  elseif keys[k] == 1 then
+    if btn(k) == false then keys[k] = 4
+  elseif keys[k] == 3 then
+    if btn(k) then keys[k] = 1
+    else keys[k] = 4
+  elseif keys[k] == 4 then
+    if btn(k) then keys[k] = 3
+    else keys[k] = 0
+
+init_keys = () ->
+  for a = 0, 5 do keys[a] = 0
+
+update_keys = () ->
+  for a = 0, 5 do update_key(a)
 
 {:step,
  :tile_size,
@@ -65,5 +94,10 @@ mod = (a, b) ->
  :random,
  :flag_get,
  :round,
- :mod
+ :mod,
+ :is_held,
+ :is_pressed,
+ :is_released,
+ :init_keys,
+ :update_keys
 }
