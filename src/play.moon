@@ -3,6 +3,7 @@ import GameObject from require "gameobject"
 require "pico"
 export engine = require "engine"
 import Ship from require "ship"
+import Stars from require "stars"
 
 class Play extends GameObject
   new: (@game_states) =>
@@ -11,10 +12,12 @@ class Play extends GameObject
   create: () =>
     engine.init_3d!
     @ship = Ship!
+    @stars = Stars!
 
   destroy: () =>
 
   update: (dt) =>
+    @stars\update(dt)
     @ship\update(dt)
     engine.update_camera!
     engine.update_player!
@@ -22,8 +25,9 @@ class Play extends GameObject
 
   render: (dt) =>
     pico.bg(0)
+    @stars\render(dt)
     engine.draw_3d!
-    print("this is the game", 17, 105, 9)
+    @ship\render(dt)
 
   render_debug: (dt) =>
     cpu = stat(1)
