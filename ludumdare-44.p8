@@ -159,7 +159,7 @@ end)({
     }
   end;
   ['gameobject'] = function()
-    local gameobject
+    local GameObject
     do
       local _class_0
       local _base_0 = {
@@ -173,7 +173,7 @@ end)({
       _class_0 = setmetatable({
         __init = function(self) end,
         __base = _base_0,
-        __name = "gameobject"
+        __name = "GameObject"
       }, {
         __index = _base_0,
         __call = function(cls, ...)
@@ -183,14 +183,14 @@ end)({
         end
       })
       _base_0.__class = _class_0
-      gameobject = _class_0
+      GameObject = _class_0
     end
     return {
-      gameobject = gameobject
+      GameObject = GameObject
     }
   end;
   ['stack'] = function()
-    local stack
+    local Stack
     do
       local _class_0
       local _base_0 = {
@@ -235,7 +235,7 @@ end)({
           self.stack = { }
         end,
         __base = _base_0,
-        __name = "stack"
+        __name = "Stack"
       }, {
         __index = _base_0,
         __call = function(cls, ...)
@@ -245,20 +245,20 @@ end)({
         end
       })
       _base_0.__class = _class_0
-      stack = _class_0
+      Stack = _class_0
     end
     return {
-      stack = stack
+      Stack = Stack
     }
   end;
   ['sprite'] = function()
     require("pico")
-    local gameobject
-    gameobject = require("gameobject").gameobject
-    local sprite
+    local GameObject
+    GameObject = require("gameobject").GameObject
+    local Sprite
     do
       local _class_0
-      local _parent_0 = gameobject
+      local _parent_0 = GameObject
       local _base_0 = {
         set_location = function(self, x, y)
           self.x, self.y = x, y
@@ -319,7 +319,7 @@ end)({
           return self:set_scale(1, 1)
         end,
         __base = _base_0,
-        __name = "sprite",
+        __name = "Sprite",
         __parent = _parent_0
       }, {
         __index = function(cls, name)
@@ -343,20 +343,20 @@ end)({
       if _parent_0.__inherited then
         _parent_0.__inherited(_parent_0, _class_0)
       end
-      sprite = _class_0
+      Sprite = _class_0
     end
     return {
-      sprite = sprite
+      Sprite = Sprite
     }
   end;
   ['star'] = function()
-    local sprite
-    sprite = require("sprite").sprite
+    local Sprite
+    Sprite = require("sprite").Sprite
     require("pico")
-    local star
+    local Star
     do
       local _class_0
-      local _parent_0 = sprite
+      local _parent_0 = Sprite
       local _base_0 = {
         update = function(self, dt)
           _class_0.__parent.update(self, dt)
@@ -396,7 +396,7 @@ end)({
           self.buffer = 10
         end,
         __base = _base_0,
-        __name = "star",
+        __name = "Star",
         __parent = _parent_0
       }, {
         __index = function(cls, name)
@@ -420,22 +420,22 @@ end)({
       if _parent_0.__inherited then
         _parent_0.__inherited(_parent_0, _class_0)
       end
-      star = _class_0
+      Star = _class_0
     end
     return {
-      star = star
+      Star = Star
     }
   end;
   ['stars'] = function()
-    local sprite
-    sprite = require("sprite").sprite
-    local star
-    star = require("star").star
+    local Sprite
+    Sprite = require("sprite").Sprite
+    local Star
+    Star = require("star").Star
     require("pico")
-    local stars
+    local Stars
     do
       local _class_0
-      local _parent_0 = sprite
+      local _parent_0 = Sprite
       local _base_0 = {
         update = function(self, dt)
           for i = 1, #self.stars do
@@ -467,11 +467,11 @@ end)({
           local max_width = self.width - 1
           self.stars = { }
           for i = 1, amount do
-            self.stars[i] = star(pico.random(min_width, max_width), pico.random(max_height, min_height))
+            self.stars[i] = Star(pico.random(min_width, max_width), pico.random(max_height, min_height))
           end
         end,
         __base = _base_0,
-        __name = "stars",
+        __name = "Stars",
         __parent = _parent_0
       }, {
         __index = function(cls, name)
@@ -495,21 +495,21 @@ end)({
       if _parent_0.__inherited then
         _parent_0.__inherited(_parent_0, _class_0)
       end
-      stars = _class_0
+      Stars = _class_0
     end
     return {
-      stars = stars
+      Stars = Stars
     }
   end;
   ['model'] = function()
-    local gameobject
-    gameobject = require("gameobject").gameobject
+    local GameObject
+    GameObject = require("gameobject").GameObject
     engine = require("engine")
     require("pico")
-    local model
+    local Model
     do
       local _class_0
-      local _parent_0 = gameobject
+      local _parent_0 = GameObject
       local _base_0 = {
         set_defaults = function(self)
           self.defaults = { }
@@ -539,7 +539,7 @@ end)({
           return self:set_defaults()
         end,
         __base = _base_0,
-        __name = "model",
+        __name = "Model",
         __parent = _parent_0
       }, {
         __index = function(cls, name)
@@ -563,20 +563,20 @@ end)({
       if _parent_0.__inherited then
         _parent_0.__inherited(_parent_0, _class_0)
       end
-      model = _class_0
+      Model = _class_0
     end
     return {
-      model = model
+      Model = Model
     }
   end;
   ['menu'] = function()
-    local gameobject
-    gameobject = require("gameobject").gameobject
+    local GameObject
+    GameObject = require("gameobject").GameObject
     require("pico")
-    local menu
+    local Menu
     do
       local _class_0
-      local _parent_0 = gameobject
+      local _parent_0 = GameObject
       local _base_0 = {
         create = function(self) end,
         destroy = function(self) end,
@@ -598,7 +598,7 @@ end)({
           return _class_0.__parent.__init(self)
         end,
         __base = _base_0,
-        __name = "menu",
+        __name = "Menu",
         __parent = _parent_0
       }, {
         __index = function(cls, name)
@@ -622,34 +622,34 @@ end)({
       if _parent_0.__inherited then
         _parent_0.__inherited(_parent_0, _class_0)
       end
-      menu = _class_0
+      Menu = _class_0
     end
     return {
-      menu = menu
+      Menu = Menu
     }
   end;
   ['play'] = function()
-    local gameobject
-    gameobject = require("gameobject").gameobject
+    local GameObject
+    GameObject = require("gameobject").GameObject
     require("pico")
     engine = require("engine")
-    local player
-    player = require("player").player
-    local ship
-    ship = require("ship").ship
-    local stars
-    stars = require("stars").stars
-    local play
+    local Player
+    Player = require("player").Player
+    local Ship
+    Ship = require("ship").Ship
+    local Stars
+    Stars = require("stars").Stars
+    local Play
     do
       local _class_0
-      local _parent_0 = gameobject
+      local _parent_0 = GameObject
       local _base_0 = {
         create = function(self)
           engine.init_3d()
-          self.ship = player()
-          self.other = ship(2)
+          self.ship = Player()
+          self.other = Ship(2)
           self.other.model.z = -25
-          self.stars = stars()
+          self.stars = Stars()
         end,
         destroy = function(self) end,
         update = function(self, dt)
@@ -665,7 +665,9 @@ end)({
           pico.bg(0)
           self.stars:render(dt)
           engine.draw_3d()
-          return self.ship:render(dt)
+          self.ship:render(dt)
+          print("life", 10, 3, 7)
+          return sspr(8, 0, 8 * 4, 8, 8, 10)
         end
       }
       _base_0.__index = _base_0
@@ -676,7 +678,7 @@ end)({
           return _class_0.__parent.__init(self)
         end,
         __base = _base_0,
-        __name = "play",
+        __name = "Play",
         __parent = _parent_0
       }, {
         __index = function(cls, name)
@@ -700,17 +702,17 @@ end)({
       if _parent_0.__inherited then
         _parent_0.__inherited(_parent_0, _class_0)
       end
-      play = _class_0
+      Play = _class_0
     end
     return {
-      play = play
+      Play = Play
     }
   end;
   ['engine'] = function()
-    ----electric gryphon's 3d library----
-    ----https://github.com/electricgryphon/pico-8-gryphon-3d-engine-library----
-    ----from https://www.lexaloffle.com/bbs/?tid=28077----
-    ----note: modified to reduce token usage----
+    ----Electric Gryphon's 3D Library----
+    ----https://github.com/electricgryphon/Pico-8-Gryphon-3D-Engine-Library----
+    ----From https://www.lexaloffle.com/bbs/?tid=28077----
+    ----NOTE: Modified to reduce token usage----
     
     hex_string_data = "0123456789abcdef"
     char_to_hex = {}
@@ -780,8 +782,8 @@ end)({
     ------------------------------------------------------------end hex string data handling--------------------------------
     
     
-    -------------------------------------------------------------begin cut here-------------------------------------------------
-    ------------------------------------------------------electric gryphon's 3d library-----------------------------------------
+    -------------------------------------------------------------BEGIN CUT HERE-------------------------------------------------
+    ------------------------------------------------------Electric Gryphon's 3D Library-----------------------------------------
     ----------------------------------------------------------------------------------------------------------------------------
     
     k_color1=4
@@ -803,7 +805,7 @@ end)({
     
     
     
-    --these are used for the 2 scanline color shading scheme
+    --These are used for the 2 scanline color shading scheme
     double_color_list=  {{0,0,0,0,0,0,0,0,0,0},
                          {0,0,0,0,0,0,0,0,0,0},
     
@@ -960,7 +962,7 @@ end)({
     k_multi_color_dynamic = 4
     k_preset_color = 5
     
-    --function load object:
+    --Function load object:
     --object_vertices: vertex list for object (see above)
     --object_faces: face list for object (see above)
     --x,y,z: translated center for the the object
@@ -1254,7 +1256,7 @@ end)({
     
             mat00,mat01,mat02,mat10,mat11,mat12,mat20,mat21,mat22=(mat11 * mat22 - mat21 * mat12) * invdet,(mat02 * mat21 - mat01 * mat22) * invdet,(mat01 * mat12 - mat02 * mat11) * invdet,(mat12 * mat20 - mat10 * mat22) * invdet,(mat00 * mat22 - mat02 * mat20) * invdet,(mat10 * mat02 - mat00 * mat12) * invdet,(mat10 * mat21 - mat20 * mat11) * invdet,(mat20 * mat01 - mat00 * mat21) * invdet,(mat00 * mat11 - mat10 * mat01) * invdet
     
-            --uh yeah i looked this one up :-)
+            --uh yeah I looked this one up :-)
     end
     
     function rotate_point(x,y,z)
@@ -1671,13 +1673,13 @@ end)({
     }
   end;
   ['holo'] = function()
-    local model
-    model = require("model").model
+    local Model
+    Model = require("model").Model
     require("pico")
-    local holo
+    local Holo
     do
       local _class_0
-      local _parent_0 = model
+      local _parent_0 = Model
       local _base_0 = {
         update = function(self, dt)
           self.model.ay = self.model.ay + 0.0025
@@ -1705,7 +1707,7 @@ end)({
           return self:set_defaults()
         end,
         __base = _base_0,
-        __name = "holo",
+        __name = "Holo",
         __parent = _parent_0
       }, {
         __index = function(cls, name)
@@ -1729,21 +1731,21 @@ end)({
       if _parent_0.__inherited then
         _parent_0.__inherited(_parent_0, _class_0)
       end
-      holo = _class_0
+      Holo = _class_0
     end
     return {
-      holo = holo
+      Holo = Holo
     }
   end;
   ['ship'] = function()
-    local model
-    model = require("model").model
+    local Model
+    Model = require("model").Model
     engine = require("engine")
     require("pico")
-    local ship
+    local Ship
     do
       local _class_0
-      local _parent_0 = model
+      local _parent_0 = Model
       local _base_0 = { }
       _base_0.__index = _base_0
       setmetatable(_base_0, _parent_0.__base)
@@ -1754,7 +1756,7 @@ end)({
           return _class_0.__parent.__init(self, "019a00eeffd2017e00ae004d019f0197fff201b80178009dffa9007e005affac0076009dffb8017f00c2007e04aa0201ff6200a8fed6ff71012fff33ff930023007cffa200c600bc015b0140fed601470185feae019000a10033027bfef40650ff59009ffee3ff7f0134ff00ffd30006fde0fff600a1fd9400f3013e003001060193000601be007efe7f03bcfe26f8e0ff5a0105fec8ff9b0126ff41ff4d0195fe6fff6301f3ff02016600defef201720112ff43015801ddfe95009b050dfd8e010e019efe9c01520117fec3ffcb01b9fe9dffb90113fe99012101b50056018000c400d0ffbf01180095f95cfffaff6d", "010304040307070506050102070301040806090b0c0b0f100f0d0e0d090a0f0b090c100e1113141317181715161511121713111418161a191b1c1b1f1f1d1e1d191a1b191d1c201e212324242327272526252122232125242826010402040708070608050206070105040602090c0a0b100c0f0e100d0a0e0f090d0c0e0a1114121318141716181512161711151416121a1b1c1c1f201f1e201d1a1e1b1d1f1c1e1a212422242728272628252226232527242622", self.color)
         end,
         __base = _base_0,
-        __name = "ship",
+        __name = "Ship",
         __parent = _parent_0
       }, {
         __index = function(cls, name)
@@ -1778,23 +1780,23 @@ end)({
       if _parent_0.__inherited then
         _parent_0.__inherited(_parent_0, _class_0)
       end
-      ship = _class_0
+      Ship = _class_0
     end
     return {
-      ship = ship
+      Ship = Ship
     }
   end;
   ['player'] = function()
-    local ship
-    ship = require("ship").ship
-    local holo
-    holo = require("holo").holo
+    local Ship
+    Ship = require("ship").Ship
+    local Holo
+    Holo = require("holo").Holo
     engine = require("engine")
     require("pico")
-    local player
+    local Player
     do
       local _class_0
-      local _parent_0 = ship
+      local _parent_0 = Ship
       local _base_0 = {
         calc_direction = function(self)
           self.x = -(self.front - self.model.ay)
@@ -1882,11 +1884,11 @@ end)({
           end
         end,
         render = function(self, dt)
-          print("x: " .. tostring(self.model.x), 17, 105, 9)
-          print("y: " .. tostring(self.model.y), 17, 110, 9)
-          print("z: " .. tostring(self.model.z), 17, 115, 9)
-          print("dx: " .. tostring(self.x), 75, 105, 9)
-          return print("dy: " .. tostring(self.y), 75, 110, 9)
+          print("X: " .. tostring(self.model.x), 17, 105, 9)
+          print("Y: " .. tostring(self.model.y), 17, 110, 9)
+          print("Z: " .. tostring(self.model.z), 17, 115, 9)
+          print("DX: " .. tostring(self.x), 75, 105, 9)
+          return print("DY: " .. tostring(self.y), 75, 110, 9)
         end,
         direction_x = function(self)
           return self.x
@@ -1899,7 +1901,7 @@ end)({
       setmetatable(_base_0, _parent_0.__base)
       _class_0 = setmetatable({
         __init = function(self)
-          self.holo = holo()
+          self.holo = Holo()
           _class_0.__parent.__init(self, 13)
           self.front = .2498
           self.mid = -.07
@@ -1913,7 +1915,7 @@ end)({
           return self:set_defaults()
         end,
         __base = _base_0,
-        __name = "player",
+        __name = "Player",
         __parent = _parent_0
       }, {
         __index = function(cls, name)
@@ -1937,10 +1939,10 @@ end)({
       if _parent_0.__inherited then
         _parent_0.__inherited(_parent_0, _class_0)
       end
-      player = _class_0
+      Player = _class_0
     end
     return {
-      player = player
+      Player = Player
     }
   end;
   ['main'] = function()
@@ -1993,12 +1995,12 @@ end)({
       __setmetatable(tbl, mt)
       return value
     end
-    local stack
-    stack = require("stack").stack
-    local play
-    play = require("play").play
-    local menu
-    menu = require("menu").menu
+    local Stack
+    Stack = require("stack").Stack
+    local Play
+    Play = require("play").Play
+    local Menu
+    Menu = require("menu").Menu
     pico = require("pico")
     _update60 = function()
       pico.update_keys()
@@ -2009,9 +2011,9 @@ end)({
     end
     pico.reset_pallet()
     pico.init_keys()
-    game_states = stack()
-    game_states:push(play(game_states))
-    game_states:push(menu(game_states))
+    game_states = Stack()
+    game_states:push(Play(game_states))
+    game_states:push(Menu(game_states))
     return game_states:create()
   end;
 })
@@ -2065,12 +2067,12 @@ _init = function()
     __setmetatable(tbl, mt)
     return value
   end
-  local stack
-  stack = require("stack").stack
-  local play
-  play = require("play").play
-  local menu
-  menu = require("menu").menu
+  local Stack
+  Stack = require("stack").Stack
+  local Play
+  Play = require("play").Play
+  local Menu
+  Menu = require("menu").Menu
   pico = require("pico")
   _update60 = function()
     pico.update_keys()
@@ -2081,17 +2083,26 @@ _init = function()
   end
   pico.reset_pallet()
   pico.init_keys()
-  game_states = stack()
-  game_states:push(play(game_states))
-  game_states:push(menu(game_states))
+  game_states = Stack()
+  game_states:push(Play(game_states))
+  game_states:push(Menu(game_states))
   return game_states:create()
 end
 __gfx__
+0000000077777777777777777777777777777777f0f00f0f00000000000000000000000000000000000000000000000000000000000000000000000000000000
+000000007000000000000000000000000000000780900d0e00000000000000000000000000000000000000000000000000000000000000000000000000000000
+0070070070888888888888888888888888888807c010050400000000000000000000000000000000000000000000000000000000000000000000000000000000
+00077000708888888888888888888888888888070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00077000708888888888888888888888888888070050040000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00700700708888888888888888888888888888070020070000000000000000000000000000000000000000000000000000000000000000000000000000000000
+000000007000000000000000000000000000000700c0010000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000777777777777777777777777777777770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000700000000000000000000000000000070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00700700708888888888888888888888888888070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00077000708888888888888888888888888ee8070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000770007088888888888888888888888888e8070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00700700708888888888888888888888888888070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000700000000000000000000000000000070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000777777777777777777777777777777770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+__map__
+0005050505050505000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0005050505050505050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0005050505050506060500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0005050506060606060505050505000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0005050006060605060505050505000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000050506060506050505050505000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000050505050606050505050500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000000000505050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
