@@ -790,6 +790,8 @@ function update_camera()
 end
 
 function init_3d()
+    if (is_init) then return end
+    is_init = true
     init_player()
     init_light()
     object_list={}

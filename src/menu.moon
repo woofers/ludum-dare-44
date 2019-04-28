@@ -2,6 +2,7 @@
 require "pico"
 import Ship from require "ship"
 import Stars from require "stars"
+import Play from require "play"
 
 class Menu
   new: (@game_states) =>
@@ -17,10 +18,10 @@ class Menu
     @turn_time = 0
 
   destroy: () =>
-    @ship\destroy!
+    if (@ship) then @ship\destroy!
 
   update: (dt) =>
-    if (btn(pico.x_key)) then @game_states\pop()
+    if (btn(pico.x_key)) then @game_states\push(Play(@game_states))
     @stars\update(dt)
     engine.update_camera!
     engine.update_3d!

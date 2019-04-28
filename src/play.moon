@@ -9,6 +9,7 @@ class Play
   new: (@game_states) =>
 
   create: () =>
+    @health = 1
     @ship = Player(self)
     @ship_colors = {2, 4, 8, 9, 10, 11, 12, 14}
     @score = 0
@@ -16,7 +17,6 @@ class Play
     for i = 1, 2
       @new_ship(i)
     @stars = Stars!
-    @health = 1
 
   new_ship: (i) =>
     if (@ships[i]) then
@@ -29,6 +29,9 @@ class Play
     @ships[i].model.z = pico.random(-30, -25)
 
   destroy: () =>
+    @ship\destroy!
+    for i = 1, 2
+      @ships[i]\destroy!
 
   update: (dt) =>
     for key, ship in pairs(@ships)
@@ -42,6 +45,7 @@ class Play
     @stars\update(dt)
     @ship\update(dt)
     @stars\set_direction(@ship\direction_x!, @ship\direction_y!)
+    @check_dead!
     engine.update_camera!
     engine.update_3d!
 
@@ -55,6 +59,10 @@ class Play
       engine.draw_3d!
     @draw_life!
     @draw_abduct!
+
+  check_dead: () =>
+    if (@health <= 0) then
+      @game_states\pop!
 
   draw_life: (x=8, y=10, width=32, height=8) =>
     bar = (width - 4) * @health

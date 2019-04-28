@@ -1,5 +1,4 @@
 export engine = require "engine"
-require "pico"
 
 class Model
   new: (v, f, @color) =>

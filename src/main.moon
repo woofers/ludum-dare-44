@@ -37,7 +37,6 @@ export rawget = (tbl, index) ->
   value
 
 import Stack from require "stack"
-import Play from require "play"
 import Menu from require "menu"
 export pico = require "pico"
 
@@ -52,6 +51,4 @@ pico.reset_pallet!
 pico.init_keys!
 
 export game_states = Stack!
-game_states\push(Play(game_states))
 game_states\push(Menu(game_states))
-game_states\create!

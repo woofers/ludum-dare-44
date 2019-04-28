@@ -7,7 +7,10 @@ class Stack
     #@stack <= 0
 
   push: (item) =>
+    unless @\is_empty!
+      @stack[#@stack]\destroy!
     @stack[#@stack + 1] = item
+    @\create!
 
   pop: () =>
     unless @\is_empty!

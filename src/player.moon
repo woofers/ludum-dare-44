@@ -16,6 +16,7 @@ class Player extends Ship
     @blink_time = 0
     @blink_count = 0
     @x, @y = 0,0
+    @is_shooting = false
 
   calc_direction: () =>
     @x = -(@front - @model.ay)
