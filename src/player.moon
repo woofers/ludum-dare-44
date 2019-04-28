@@ -4,7 +4,7 @@ require "pico"
 
 class Player extends Ship
   new: () =>
-    super(13)
+    super!
     @front = .2498
     @mid = -.07
     @model.y = 5

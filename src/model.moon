@@ -14,6 +14,9 @@ class Model
     @defaults.y = @model.y
     @defaults.z = @model.z
 
+  destroy: () =>
+    engine.delete_object(@model)
+
   set: (key, value) =>
     default = 0
     if (@defaults[key]) then default = @defaults[key]

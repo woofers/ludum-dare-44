@@ -7,9 +7,7 @@ class Star extends Sprite
     super(x, y, radius, radius)
     @\set_location(@x, @y)
     @color = 7
-    @direction = {}
-    @direction.x = 0
-    @direction.y = 0
+    @direction = {x: .1, y: .1}
     @buffer = 10
 
   update: (dt) =>

@@ -9,7 +9,6 @@ class Play
   new: (@game_states) =>
 
   create: () =>
-    engine.init_3d!
     @ship = Player!
     @ship_colors = {2, 4, 8, 9, 10, 11, 12, 13, 14}
     @ships = {}
