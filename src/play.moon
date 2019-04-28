@@ -38,7 +38,7 @@ class Play
       ship\update(dt)
       ship.model.z += 0.1
       if (engine.intersect_bounding_box(@ship.model, ship.model)) then
-        @health -= 0.0025
+        @health -= 0.0035
         @ship\start_blink!
       if (ship.model.z > 10) then
         @new_ship(key)
