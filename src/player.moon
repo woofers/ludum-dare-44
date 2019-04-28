@@ -103,7 +103,7 @@ class Player extends Ship
 
   update_shoot: (dt) =>
     if (@is_shooting) then
-      @shoot_radius -= dt
+      @shoot_radius -= dt * 3
       if (@shoot_radius < 0) then
         @is_shooting = false
 
