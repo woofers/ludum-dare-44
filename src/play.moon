@@ -3,7 +3,7 @@ require "pico"
 export engine = require "engine"
 import Player from require "player"
 import Ship from require "ship"
-import Stars from require "stars"
+import Humans from require "humans"
 
 class Play
   new: (@game_states) =>
@@ -13,7 +13,7 @@ class Play
     @ship = Player!
     @other = Ship(2)
     @other.model.z = -25
-    @stars = Stars!
+    @humans = Humans!
     @health = 1
 
   destroy: () =>
@@ -21,15 +21,15 @@ class Play
   update: (dt) =>
     @other.model.z += 0.1
     @other.model.x += 0.1
-    @stars\update(dt)
+    @humans\update(dt)
     @ship\update(dt)
-    @stars\set_direction(@ship\direction_x!, @ship\direction_y!)
+    @humans\set_direction(@ship\direction_x!, @ship\direction_y!)
     engine.update_camera!
     engine.update_3d!
 
   render: (dt) =>
     pico.bg(0)
-    @stars\render(dt)
+    @humans\render(dt)
     if (@ship.model.ax > .0274) then
       engine.draw_3d!
       @ship\render(dt)
