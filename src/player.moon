@@ -12,7 +12,6 @@ class Player extends Ship
     @model.z = -5
     @model.ax = @mid
     @model.ay = @front
-    @projection = {x: 0, y: 0}
     @blink_time = 0
     @blink_count = 0
     @x, @y = 0,0
@@ -24,7 +23,7 @@ class Player extends Ship
     if (@y > 0) then @y *= 4
 
   update: (dt) =>
-    @projection.x, @projection.y = engine.project_point(@model.tx, @model.ty, @model.tz)
+    super\update(dt)
     @calc_direction!
     speed = .004
     if (btn(pico.left)) then
@@ -119,7 +118,7 @@ class Player extends Ship
     x, y = @x * -100, @y * -80
     if (y < 7.21) then
       y *= 0.1
-    @shoot_radius = 5
+    @shoot_radius = 6
     @shoot_time = 0
     @shoot_location = {x: @projection.x + x, y: @projection.y + y, direction_x: @x, direction_y: @y}
     @is_shooting = true

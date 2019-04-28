@@ -18,15 +18,15 @@ class Play
       @new_ship(i)
     @stars = Stars!
 
-  new_ship: (i) =>
+  new_ship: (i, score=10) =>
     if (@ships[i]) then
-      @score += 10
+      @score += score
       @ships[i]\destroy!
       @ships[i] = nil
     @ships[i] = Ship(@ship_colors[pico.random(1, #@ship_colors)])
     @ships[i].model.x = pico.random(-10, 10)
     @ships[i].model.y = pico.random(-10, 10)
-    @ships[i].model.z = pico.random(-30, -25)
+    @ships[i].model.z = pico.random(-40, -30)
 
   destroy: () =>
     @ship\destroy!
@@ -35,12 +35,21 @@ class Play
 
   update: (dt) =>
     for key, ship in pairs(@ships)
+      ship\update(dt)
       ship.model.z += 0.1
       if (engine.intersect_bounding_box(@ship.model, ship.model)) then
         @health -= 0.0025
         @ship\start_blink!
       if (ship.model.z > 10) then
         @new_ship(key)
+      if (@ship.is_shooting) then
+        if (@ship.shoot_location.x - @ship.shoot_radius < ship.projection.x) then
+          if (ship.projection.x < @ship.shoot_radius + @ship.shoot_location.x) then
+            @new_ship(key, 40)
+        if (@ship.shoot_location.y - @ship.shoot_radius < ship.projection.y) then
+          if (ship.projection.y < @ship.shoot_radius + @ship.shoot_location.y) then
+            @new_ship(key, 40)
+
 
     @stars\update(dt)
     @ship\update(dt)
