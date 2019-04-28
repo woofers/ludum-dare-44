@@ -73,6 +73,7 @@ class Play
 
   check_dead: () =>
     if (@health <= 0) then
+      sfx(6)
       @game_states\pop!
 
   draw_life: (x=8, y=10, width=32, height=8) =>
