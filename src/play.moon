@@ -37,7 +37,7 @@ class Play
     for key, ship in pairs(@ships)
       ship.model.z += 0.1
       if (engine.intersect_bounding_box(@ship.model, ship.model)) then
-        @health -= 0.001
+        @health -= 0.0025
         @ship\start_blink!
       if (ship.model.z > 10) then
         @new_ship(key)
