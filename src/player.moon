@@ -14,6 +14,7 @@ class Player extends Ship
     @projection = {x: 0, y: 0}
     @blink_time = 0
     @blink_count = 0
+    @x, @y = 0,0
 
   calc_direction: () =>
     @x = -(@front - @model.ay)
@@ -67,6 +68,15 @@ class Player extends Ship
     @set(key, value)
 
   render: (dt) =>
+    print("X: #{@model.x}", 17, 105, 9)
+    print("Y: #{@model.y}", 17, 110, 9)
+    print("Z: #{@model.z}", 17, 116, 9)
+
+
+    x, y = @x, @y
+    if (y < 7.21) then
+      y *= 0.1
+    pico.draw_rectangle(@projection.x + x * -100, @projection.y + y * -80, 0, 0, 9)
     if (pico.is_held(pico.x_key)) then
       @draw_holo()
 
