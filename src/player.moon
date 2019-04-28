@@ -116,6 +116,7 @@ class Player extends Ship
 
   shoot: () =>
     if (@is_shooting or @projection.x == 0) return
+    sfx(5)
     x, y = @x * -100, @y * -80
     if (y < 7.21) then
       y *= 0.1
