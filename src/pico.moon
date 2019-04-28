@@ -15,8 +15,8 @@ set_alpha_key = () ->
   palt(0, false)
 
 reset_pallet = () ->
-  pal()
-  set_alpha_key()
+  pal!
+  set_alpha_key!
 
 draw_sprite = (id, x, y, tile_x, tile_y, flip_x, flip_y) ->
   adjust_x, adjust_y = 0, 0
