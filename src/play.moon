@@ -46,9 +46,13 @@ class Play
         if (@ship.shoot_location.x - @ship.shoot_radius < ship.projection.x) then
           if (ship.projection.x < @ship.shoot_radius + @ship.shoot_location.x) then
             @new_ship(key, 40)
+            @health += 0.05
+            if (@health > 1) then @health = 1
         if (@ship.shoot_location.y - @ship.shoot_radius < ship.projection.y) then
           if (ship.projection.y < @ship.shoot_radius + @ship.shoot_location.y) then
             @new_ship(key, 40)
+            @health += 0.05
+            if (@health > 1) then @health = 1
 
 
     @stars\update(dt)
