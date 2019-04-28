@@ -51,12 +51,12 @@ class Player extends Ship
     @update_blink(dt)
     @inc_children("x", @x)
     @inc_children("y", @y)
-    upper_bound = 13.5237
-    lower_bound = -1.7895
+    upper_bound = 16.5237
+    lower_bound = -4.7895
     if (@model.y > upper_bound) then @set_children("y", upper_bound)
     if (@model.y < lower_bound) then @set_children("y", lower_bound)
-    upper_bound = 4
-    lower_bound = -4.3033
+    upper_bound = 7
+    lower_bound = -7.3033
     if (@model.x > upper_bound) then @set_children("x", upper_bound)
     if (@model.x < lower_bound) then @set_children("x", lower_bound)
 
