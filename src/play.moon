@@ -26,7 +26,7 @@ class Play
     @ships[i] = Ship(@ship_colors[pico.random(1, #@ship_colors)])
     @ships[i].model.x = pico.random(-10, 10)
     @ships[i].model.y = pico.random(-10, 10)
-    @ships[i].model.z = pico.random(-40, -30)
+    @ships[i].model.z = pico.random(-35, -30)
 
   destroy: () =>
     @ship\destroy!
