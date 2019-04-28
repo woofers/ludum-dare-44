@@ -11,6 +11,7 @@ class Play
   create: () =>
     @ship = Player!
     @ship_colors = {2, 4, 8, 9, 10, 11, 12, 14}
+    @score = 0
     @ships = {}
     for i = 1, 2
       @new_ship(i)
@@ -19,6 +20,7 @@ class Play
 
   new_ship: (i) =>
     if (@ships[i]) then
+      @score += 10
       @ships[i]\destroy!
       @ships[i] = nil
     @ships[i] = Ship(@ship_colors[pico.random(1, #@ship_colors)])
@@ -64,6 +66,6 @@ class Play
 
   draw_abduct: (x=50, y=10) =>
     print("score", x + 2, y - 7, 7)
-    print("123", x + 2, y, 7)
+    print("#{@score}", x + 2, y, 7)
 
 {:Play}
