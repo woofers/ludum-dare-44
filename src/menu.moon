@@ -6,6 +6,7 @@ import Play from require "play"
 
 class Menu
   new: (@game_states) =>
+    @game_over = false
 
   create: () =>
     engine.init_3d!
@@ -21,7 +22,10 @@ class Menu
     if (@ship) then @ship\destroy!
 
   update: (dt) =>
-    if (btn(pico.x_key)) then @game_states\push(Play(@game_states))
+    if (btn(pico.x_key)) then
+      @game_over = true
+      @game_states\push(Play(@game_states))
+
     @stars\update(dt)
     engine.update_camera!
     engine.update_3d!
@@ -47,7 +51,8 @@ class Menu
     @stars\render(dt)
     engine.draw_3d!
 
-    @font("alien, E X P A N S I O N .", 17, 105)
+    text = if @game_over then "you, D I E D ." else "alien, E X P A N S I O N ."
+    @font(text, 17, 105)
     @font("press, \151", 17, 20)
 
   font: (text, x, y) =>
