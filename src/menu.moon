@@ -34,8 +34,6 @@ class Menu
         @turn_time = 0
         @is_turning = false
 
-    printh(@time)
-
     if (@ship.model.z > 2.249 and @dir == 1) then
       @dir = -1
       @is_turning = true
@@ -45,7 +43,6 @@ class Menu
 
 
   render: (dt) =>
-    pico.bg(0)
     @stars\render(dt)
     engine.draw_3d!
 

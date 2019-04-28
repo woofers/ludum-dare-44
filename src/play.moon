@@ -44,7 +44,6 @@ class Play
     engine.update_3d!
 
   render: (dt) =>
-    pico.bg(0)
     @stars\render(dt)
     if (@ship.model.ax > .0274) then
       engine.draw_3d!

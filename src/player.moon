@@ -11,8 +11,6 @@ class Player extends Ship
     @model.z = -5
     @model.ax = @mid
     @model.ay = @front
-    @children = {self}
-    @set_defaults!
     @projection = {x: 0, y: 0}
     @blink_time = 0
     @blink_count = 0
@@ -23,7 +21,6 @@ class Player extends Ship
     if (@y > 0) then @y *= 4
 
   update: (dt) =>
-    @projection = {}
     @projection.x, @projection.y = engine.project_point(@model.tx, @model.ty, @model.tz)
     @calc_direction!
     speed = .004
@@ -64,15 +61,10 @@ class Player extends Ship
     if (@model.x < lower_bound) then @set_children("x", lower_bound)
 
   inc_children: (key, increment) =>
-    for _, child in pairs(@children)
-      child\inc(key, increment)
+    @inc(key, increment)
 
   set_children: (key, value) =>
-    for _, child in pairs(@children)
-      offset = 0
-      if (@defaults[key]) then
-        offset = -@defaults[key]
-      child\set(key, value + offset)
+    @set(key, value)
 
   render: (dt) =>
     if (pico.is_held(pico.x_key)) then

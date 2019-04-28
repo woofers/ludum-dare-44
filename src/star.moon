@@ -4,8 +4,7 @@ require "pico"
 class Star extends Sprite
   new: (@x, @y) =>
     radius = pico.random(0, 1)
-    super(x, y, radius, radius)
-    @\set_location(@x, @y)
+    super(@x, @y, radius, radius)
     @color = 7
     @direction = {x: .1, y: .1}
     @buffer = 10
