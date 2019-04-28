@@ -3,8 +3,9 @@ export engine = require "engine"
 require "pico"
 
 class Player extends Ship
-  new: () =>
+  new: (game) =>
     super!
+    @game = game
     @front = .2498
     @mid = -.07
     @model.y = 5
@@ -92,6 +93,7 @@ class Player extends Ship
   update_blink: (dt) =>
     if (@blink) then
       if (@blink_count >= 2) then
+        if (@game.score >= 3) then @game.score -= 3
         @show!
         @blink = false
         @blink_time = 0

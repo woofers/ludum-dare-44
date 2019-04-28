@@ -9,7 +9,7 @@ class Play
   new: (@game_states) =>
 
   create: () =>
-    @ship = Player!
+    @ship = Player(self)
     @ship_colors = {2, 4, 8, 9, 10, 11, 12, 14}
     @score = 0
     @ships = {}
