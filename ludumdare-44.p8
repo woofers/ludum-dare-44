@@ -309,7 +309,7 @@ end)({
         update = function(self, dt)
           self.x = self.x + (self.direction.x * pico.random(0, 15))
           self.y = self.y + (self.direction.y * pico.random(0, 15))
-          self.height = pico.random(0, 2)
+          self.height = pico.random(0, 3)
           if self.x > pico.screen_size - 1 then
             self.x = pico.random(0, pico.screen_size - self.buffer)
           end
@@ -336,9 +336,10 @@ end)({
           _class_0.__parent.__init(self, x, y, radius, radius)
           self:set_location(self.x, self.y)
           self.color = 7
-          self.direction = { }
-          self.direction.x = 0
-          self.direction.y = 0
+          self.direction = {
+            x = .1,
+            y = .1
+          }
           self.buffer = 10
         end,
         __base = _base_0,
@@ -460,6 +461,9 @@ end)({
           self.defaults.y = self.model.y
           self.defaults.z = self.model.z
         end,
+        destroy = function(self)
+          return engine.delete_object(self.model)
+        end,
         set = function(self, key, value)
           local default = 0
           if (self.defaults[key]) then
@@ -499,20 +503,68 @@ end)({
   end;
   ['menu'] = function()
     require("pico")
+    local Ship
+    Ship = require("ship").Ship
+    local Stars
+    Stars = require("stars").Stars
     local Menu
     do
       local _class_0
       local _base_0 = {
-        create = function(self) end,
-        destroy = function(self) end,
+        create = function(self)
+          engine.init_3d()
+          self.ship = Ship()
+          self.ship.model.y = 7
+          self.ship.model.z = -25
+          self.stars = Stars()
+          self.dir = 1
+          self.is_turning = false
+          self.turn_time = 0
+        end,
+        destroy = function(self)
+          return self.ship:destroy()
+        end,
         update = function(self, dt)
           if (btn(pico.x_key)) then
-            return self.game_states:pop()
+            self.game_states:pop()
+          end
+          self.stars:update(dt)
+          engine.update_camera()
+          engine.update_3d()
+          if (not self.is_turning) then
+            self.ship.model.z = self.ship.model.z + (0.5 * self.dir)
+          else
+            self.ship.model.ay = self.ship.model.ay + 0.01
+            if (self.turn_time == 0) then
+              sfx(0)
+            end
+            self.turn_time = self.turn_time + dt
+            if (self.turn_time > .79) then
+              self.turn_time = 0
+              self.is_turning = false
+            end
+          end
+          printh(self.time)
+          if (self.ship.model.z > 2.249 and self.dir == 1) then
+            self.dir = -1
+            self.is_turning = true
+          else
+            if (self.ship.model.z < -7 and self.dir == -1) then
+              self.dir = 1
+              self.is_turning = true
+            end
           end
         end,
         render = function(self, dt)
-          pico.bg(1)
-          return print("alien expansion", 17, 105, 9)
+          pico.bg(0)
+          self.stars:render(dt)
+          engine.draw_3d()
+          self:font("alien, E X P A N S I O N .", 17, 105)
+          return self:font("press, \151", 17, 20)
+        end,
+        font = function(self, text, x, y)
+          print(text, x, y, 13)
+          return print(text, x + 1, y + 1, 7)
         end
       }
       _base_0.__index = _base_0
@@ -551,17 +603,45 @@ end)({
       local _class_0
       local _base_0 = {
         create = function(self)
-          engine.init_3d()
           self.ship = Player()
-          self.other = Ship(2)
-          self.other.model.z = -25
+          self.ship_colors = {
+            2,
+            4,
+            8,
+            9,
+            10,
+            11,
+            12,
+            14
+          }
+          self.ships = { }
+          for i = 1, 2 do
+            self:new_ship(i)
+          end
           self.stars = Stars()
           self.health = 1
         end,
+        new_ship = function(self, i)
+          if (self.ships[i]) then
+            self.ships[i]:destroy()
+            self.ships[i] = nil
+          end
+          self.ships[i] = Ship(self.ship_colors[pico.random(1, #self.ship_colors)])
+          self.ships[i].model.x = pico.random(-10, 10)
+          self.ships[i].model.y = pico.random(-10, 10)
+          self.ships[i].model.z = pico.random(-30, -25)
+        end,
         destroy = function(self) end,
         update = function(self, dt)
-          self.other.model.z = self.other.model.z + 0.1
-          self.other.model.x = self.other.model.x + 0.1
+          for key, ship in pairs(self.ships) do
+            ship.model.z = ship.model.z + 0.1
+            if (engine.intersect_bounding_box(self.ship.model, ship.model)) then
+              self.health = self.health - 0.001
+            end
+            if (ship.model.z > 10) then
+              self:new_ship(key)
+            end
+          end
           self.stars:update(dt)
           self.ship:update(dt)
           self.stars:set_direction(self.ship:direction_x(), self.ship:direction_y())
@@ -571,9 +651,13 @@ end)({
         render = function(self, dt)
           pico.bg(0)
           self.stars:render(dt)
-          self.ship:render(dt)
-          engine.draw_3d()
-          self.health = self.health - 0.01
+          if (self.ship.model.ax > .0274) then
+            engine.draw_3d()
+            self.ship:render(dt)
+          else
+            self.ship:render(dt)
+            engine.draw_3d()
+          end
           self:draw_life()
           return self:draw_abduct()
         end,
@@ -1589,7 +1673,9 @@ end)({
        camera_matrix_transform = camera_matrix_transform,
        rotate_point = rotate_point,
        camera = camera,
-       project_point = project_point
+       project_point = project_point,
+       intersect_bounding_box = intersect_bounding_box,
+       delete_object = delete_object
     }
   end;
   ['ship'] = function()
@@ -1606,9 +1692,12 @@ end)({
       setmetatable(_base_0, _parent_0.__base)
       _class_0 = setmetatable({
         __init = function(self, color)
+          if color == nil then
+            color = 13
+          end
           self.color = color
-          local _ = self.color or 13
-          return _class_0.__parent.__init(self, "019a00eeffd2017e00ae004d019f0197fff201b80178009dffa9007e005affac0076009dffb8017f00c2007e04aa0201ff6200a8fed6ff71012fff33ff930023007cffa200c600bc015b0140fed601470185feae019000a10033027bfef40650ff59009ffee3ff7f0134ff00ffd30006fde0fff600a1fd9400f3013e003001060193000601be007efe7f03bcfe26f8e0ff5a0105fec8ff9b0126ff41ff4d0195fe6fff6301f3ff02016600defef201720112ff43015801ddfe95009b050dfd8e010e019efe9c01520117fec3ffcb01b9fe9dffb90113fe99012101b50056018000c400d0ffbf01180095f95cfffaff6d", "010304040307070506050102070301040806090b0c0b0f100f0d0e0d090a0f0b090c100e1113141317181715161511121713111418161a191b1c1b1f1f1d1e1d191a1b191d1c201e212324242327272526252122232125242826010402040708070608050206070105040602090c0a0b100c0f0e100d0a0e0f090d0c0e0a1114121318141716181512161711151416121a1b1c1c1f201f1e201d1a1e1b1d1f1c1e1a212422242728272628252226232527242622", self.color)
+          _class_0.__parent.__init(self, "019a00eeffd2017e00ae004d019f0197fff201b80178009dffa9007e005affac0076009dffb8017f00c2007e04aa0201ff6200a8fed6ff71012fff33ff930023007cffa200c600bc015b0140fed601470185feae019000a10033027bfef40650ff59009ffee3ff7f0134ff00ffd30006fde0fff600a1fd9400f3013e003001060193000601be007efe7f03bcfe26f8e0ff5a0105fec8ff9b0126ff41ff4d0195fe6fff6301f3ff02016600defef201720112ff43015801ddfe95009b050dfd8e010e019efe9c01520117fec3ffcb01b9fe9dffb90113fe99012101b50056018000c400d0ffbf01180095f95cfffaff6d", "010304040307070506050102070301040806090b0c0b0f100f0d0e0d090a0f0b090c100e1113141317181715161511121713111418161a191b1c1b1f1f1d1e1d191a1b191d1c201e212324242327272526252122232125242826010402040708070608050206070105040602090c0a0b100c0f0e100d0a0e0f090d0c0e0a1114121318141716181512161711151416121a1b1c1c1f201f1e201d1a1e1b1d1f1c1e1a212422242728272628252226232527242622", self.color)
+          self.model.ay = 1.75
         end,
         __base = _base_0,
         __name = "Ship",
@@ -1655,7 +1744,7 @@ end)({
           self.x = -(self.front - self.model.ay)
           self.y = self.mid - self.model.ax
           if (self.y > 0) then
-            self.y = self.y * 3
+            self.y = self.y * 4
           end
         end,
         update = function(self, dt)
@@ -1728,13 +1817,8 @@ end)({
         end,
         render = function(self, dt)
           if (pico.is_held(pico.x_key)) then
-            self:draw_holo()
+            return self:draw_holo()
           end
-          print("X: " .. tostring(self.model.x), 17, 105, 9)
-          print("Y: " .. tostring(self.model.y), 17, 110, 9)
-          print("Z: " .. tostring(self.model.z), 17, 115, 9)
-          print("PX: " .. tostring(self.projection.x), 75, 105, 9)
-          return print("PY: " .. tostring(self.projection.y), 75, 110, 9)
         end,
         draw_holo = function(self, x)
           if x == nil then
@@ -1755,7 +1839,7 @@ end)({
       setmetatable(_base_0, _parent_0.__base)
       _class_0 = setmetatable({
         __init = function(self)
-          _class_0.__parent.__init(self, 13)
+          _class_0.__parent.__init(self)
           self.front = .2498
           self.mid = -.07
           self.model.y = 5
@@ -1978,3 +2062,6 @@ __map__
 0000050506060506050505050505000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000050505050606050505050500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000505050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+__sfx__
+000200000c550065500a5500a550055500a550045500455005550065501a5001a50019500195001a5001a5001b5001c5001a500140000100015500185001f5000e5001a5001b5001a5001a5001a5001b50000000
+0002000005550075500755000000075501b5501c5501b550175501655015550155501655017550096500d65011650156501965022650286502c6502e650306503065004550055500655008550075500755007550

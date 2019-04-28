@@ -28,6 +28,7 @@ class Menu
       @ship.model.z += 0.5 * @dir
     else
       @ship.model.ay += 0.01
+      if (@turn_time == 0) then sfx(0)
       @turn_time += dt
       if (@turn_time > .79) then
         @turn_time = 0
