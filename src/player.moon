@@ -71,7 +71,7 @@ class Player extends Ship
 
   render: (dt) =>
     @render_shoot(dt)
-    if (btn(pico.x_key)) then
+    if (btnp(pico.x_key)) then
       @shoot!
 
   draw_holo: (x=-5) =>
