@@ -13,12 +13,18 @@ class Play
     @ship_colors = {2, 4, 8, 9, 10, 11, 12, 13, 14}
     @ships = {}
     for i = 1, 2
-      @ships[i] = Ship(@ship_colors[pico.random(1, #@ship_colors)])
-      @ships[i].model.x = pico.random(-10, 10)
-      @ships[i].model.y = pico.random(-10, 10)
-      @ships[i].model.z = pico.random(-30, -25)
+      @new_ship(i)
     @stars = Stars!
     @health = 1
+
+  new_ship: (i) =>
+    if (@ships[i]) then
+      @ships[i]\destroy!
+      @ships[i] = nil
+    @ships[i] = Ship(@ship_colors[pico.random(1, #@ship_colors)])
+    @ships[i].model.x = pico.random(-10, 10)
+    @ships[i].model.y = pico.random(-10, 10)
+    @ships[i].model.z = pico.random(-30, -25)
 
   destroy: () =>
 
@@ -29,9 +35,7 @@ class Play
       if (engine.intersect_bounding_box(@ship.model, ship.model)) then
         @health -= 0.001
       if (ship.model.z > 10) then
-        @ships[key].model.x = pico.random(-10, 10)
-        @ships[key].model.y = pico.random(-10, 10)
-        @ships[key].model.z = pico.random(-30, -25)
+        @new_ship(key)
 
     @stars\update(dt)
     @ship\update(dt)

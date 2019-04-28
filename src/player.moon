@@ -73,11 +73,6 @@ class Player extends Ship
   render: (dt) =>
     if (pico.is_held(pico.x_key)) then
       @draw_holo()
-    print("X: #{@model.x}", 17, 105, 9)
-    print("Y: #{@model.y}", 17, 110, 9)
-    print("Z: #{@model.z}", 17, 115, 9)
-    print("PX: #{@projection.x}", 75, 105, 9)
-    print("PY: #{@projection.y}", 75, 110, 9)
 
   draw_holo: (x=-5) =>
     pico.draw_sprite(40, @projection.x + x, @projection.y, 1, 1)
