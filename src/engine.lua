@@ -953,5 +953,6 @@ return {
    camera_matrix_transform = camera_matrix_transform,
    rotate_point = rotate_point,
    camera = camera,
-   project_point = project_point
+   project_point = project_point,
+   intersect_bounding_box = intersect_bounding_box
 }

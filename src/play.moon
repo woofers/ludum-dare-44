@@ -11,16 +11,29 @@ class Play
   create: () =>
     engine.init_3d!
     @ship = Player!
-    @other = Ship(2)
-    @other.model.z = -25
+    @ship_colors = {2, 4, 8, 9, 10, 11, 12, 13, 14}
+    @ships = {}
+    for i = 1, 2
+      @ships[i] = Ship(@ship_colors[pico.random(1, #@ship_colors)])
+      @ships[i].model.x = pico.random(-10, 10)
+      @ships[i].model.y = pico.random(-10, 10)
+      @ships[i].model.z = pico.random(-30, -25)
     @stars = Stars!
     @health = 1
 
   destroy: () =>
 
   update: (dt) =>
-    @other.model.z += 0.1
-    @other.model.x += 0.1
+    for key, ship in pairs(@ships)
+      ship.model.z += 0.1
+      printh(ship.model.z)
+      if (engine.intersect_bounding_box(@ship.model, ship.model)) then
+        @health -= 0.001
+      if (ship.model.z > 10) then
+        @ships[key].model.x = pico.random(-10, 10)
+        @ships[key].model.y = pico.random(-10, 10)
+        @ships[key].model.z = pico.random(-30, -25)
+
     @stars\update(dt)
     @ship\update(dt)
     @stars\set_direction(@ship\direction_x!, @ship\direction_y!)
@@ -36,7 +49,6 @@ class Play
     else
       @ship\render(dt)
       engine.draw_3d!
-    @health -= 0.01
     @draw_life!
     @draw_abduct!
 
