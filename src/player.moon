@@ -71,10 +71,6 @@ class Player extends Ship
     @set(key, value)
 
   render: (dt) =>
-    print("X: #{@model.x}", 17, 105, 9)
-    print("Y: #{@model.y}", 17, 110, 9)
-    print("Z: #{@model.z}", 17, 116, 9)
-
     @render_shoot(dt)
     if (pico.is_held(pico.x_key)) then
       @shoot!
@@ -115,15 +111,17 @@ class Player extends Ship
   render_shoot: (dt) =>
     if (@is_shooting) then
       circ(@shoot_location.x, @shoot_location.y, @shoot_radius, 8)
+      @shoot_location.x -= 0.1 * @shoot_location.direction_x
+      @shoot_location.y -= 0.1 * @shoot_location.direction_y
 
   shoot: () =>
-    if (@is_shooting) return
+    if (@is_shooting or @projection.x == 0) return
     x, y = @x * -100, @y * -80
     if (y < 7.21) then
       y *= 0.1
     @shoot_radius = 5
     @shoot_time = 0
-    @shoot_location = {x: @projection.x + x, y: @projection.y + y}
+    @shoot_location = {x: @projection.x + x, y: @projection.y + y, direction_x: @x, direction_y: @y}
     @is_shooting = true
 
 {:Player}
