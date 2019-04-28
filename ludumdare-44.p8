@@ -78,55 +78,6 @@ end)({
     mod = function(a, b)
       return a - flr(a / b) * b
     end
-    local keys = { }
-    local is_held
-    is_held = function(k)
-      return band(keys[k], 1) == 1
-    end
-    local is_pressed
-    is_pressed = function(k)
-      return band(keys[k], 2) == 2
-    end
-    local is_released
-    is_released = function(k)
-      return band(keys[k], 4) == 4
-    end
-    local update_key
-    update_key = function(k)
-      if keys[k] == 0 then
-        if btn(k) then
-          keys[k] = 3
-        end
-      elseif keys[k] == 1 then
-        if btn(k) == false then
-          keys[k] = 4
-        end
-      elseif keys[k] == 3 then
-        if btn(k) then
-          keys[k] = 1
-        else
-          keys[k] = 4
-        end
-      elseif keys[k] == 4 then
-        if btn(k) then
-          keys[k] = 3
-        else
-          keys[k] = 0
-        end
-      end
-    end
-    local init_keys
-    init_keys = function()
-      for a = 0, 5 do
-        keys[a] = 0
-      end
-    end
-    local update_keys
-    update_keys = function()
-      for a = 0, 5 do
-        update_key(a)
-      end
-    end
     return {
       step = step,
       tile_size = tile_size,
@@ -148,12 +99,7 @@ end)({
       random = random,
       flag_get = flag_get,
       round = round,
-      mod = mod,
-      is_held = is_held,
-      is_pressed = is_pressed,
-      is_released = is_released,
-      init_keys = init_keys,
-      update_keys = update_keys
+      mod = mod
     }
   end;
   ['stack'] = function()
@@ -165,7 +111,11 @@ end)({
           return #self.stack <= 0
         end,
         push = function(self, item)
+          if not (self:is_empty()) then
+            self.stack[#self.stack]:destroy()
+          end
           self.stack[#self.stack + 1] = item
+          return self:create()
         end,
         pop = function(self)
           if not (self:is_empty()) then
@@ -219,66 +169,20 @@ end)({
     }
   end;
   ['sprite'] = function()
-    require("pico")
     local Sprite
     do
       local _class_0
-      local _base_0 = {
-        set_location = function(self, x, y)
-          self.x, self.y = x, y
-        end,
-        set_scale = function(self, x, y)
-          self.scale_x = x
-          self.scale_y = y
-        end,
-        translate = function(self, x, y)
-          return self:set_location(self.x + x, self.y + y)
-        end,
-        facing_right = function(self)
-          return self.scale_x > 0
-        end,
-        facing_left = function(self)
-          return self.scale_x < 0
-        end,
-        left_x = function(self)
-          return flr(self:local_x() / pico.tile_size)
-        end,
-        right_x = function(self)
-          return flr((self:local_x() + pico.tile_size - 1) / pico.tile_size)
-        end,
-        top_y = function(self)
-          return flr(self:local_y() / pico.tile_size)
-        end,
-        bottom_y = function(self)
-          return flr((self:local_y() + pico.tile_size - 1) / pico.tile_size)
-        end,
-        grid_x = function(self)
-          return flr(self.x / pico.tile_size)
-        end,
-        grid_y = function(self)
-          return flr(self.y / pico.tile_size)
-        end,
-        local_x = function(self)
-          return pico.mod(self.x, pico.screen_size)
-        end,
-        local_y = function(self)
-          return pico.mod(self.y, pico.screen_size)
-        end,
-        local_grid_x = function(self)
-          return flr(self:local_x() / pico.tile_size)
-        end,
-        local_grid_y = function(self)
-          return flr(self:local_y() / pico.tile_size)
-        end
-      }
+      local _base_0 = { }
       _base_0.__index = _base_0
       _class_0 = setmetatable({
         __init = function(self, x, y, width, height)
+          if x == nil then
+            x = 0
+          end
+          if y == nil then
+            y = 0
+          end
           self.x, self.y, self.width, self.height = x, y, width, height
-          self.x = self.x or 0
-          self.y = self.y or 0
-          self:set_location(self.x, self.y)
-          return self:set_scale(1, 1)
         end,
         __base = _base_0,
         __name = "Sprite"
@@ -333,8 +237,7 @@ end)({
         __init = function(self, x, y)
           self.x, self.y = x, y
           local radius = pico.random(0, 1)
-          _class_0.__parent.__init(self, x, y, radius, radius)
-          self:set_location(self.x, self.y)
+          _class_0.__parent.__init(self, self.x, self.y, radius, radius)
           self.color = 7
           self.direction = {
             x = .1,
@@ -455,24 +358,36 @@ end)({
     do
       local _class_0
       local _base_0 = {
-        set_defaults = function(self)
-          self.defaults = { }
-          self.defaults.x = self.model.x
-          self.defaults.y = self.model.y
-          self.defaults.z = self.model.z
-        end,
         destroy = function(self)
           return engine.delete_object(self.model)
         end,
         set = function(self, key, value)
-          local default = 0
-          if (self.defaults[key]) then
-            default = self.defaults[key]
-          end
-          self.model[key] = value + default
+          self.model[key] = value
         end,
         inc = function(self, key, value)
           self.model[key] = self.model[key] + value
+        end,
+        hide = function(self)
+          if (not self.hidden) then
+            self.model.z = self.model.z - 1000
+          end
+          self.hidden = true
+        end,
+        show = function(self)
+          if (self.hidden) then
+            self.model.z = self.model.z + 1000
+          end
+          self.hidden = false
+        end,
+        toggle = function(self)
+          if (self.hidden) then
+            return self:show()
+          else
+            return self:hide()
+          end
+        end,
+        update = function(self, dt)
+          self.projection.x, self.projection.y = engine.project_point(self.model.tx, self.model.ty, self.model.tz)
         end
       }
       _base_0.__index = _base_0
@@ -482,7 +397,10 @@ end)({
           self.v = engine.read_vector_string(v)
           self.f = engine.read_face_string(f)
           self.model = engine.load_object(self.v, self.f, 0, 0, 0, 0, -.35, 0, false, k_colorize_dynamic, self.color)
-          return self:set_defaults()
+          self.projection = {
+            x = 0,
+            y = 0
+          }
         end,
         __base = _base_0,
         __name = "Model"
@@ -507,6 +425,8 @@ end)({
     Ship = require("ship").Ship
     local Stars
     Stars = require("stars").Stars
+    local Play
+    Play = require("play").Play
     local Menu
     do
       local _class_0
@@ -522,11 +442,14 @@ end)({
           self.turn_time = 0
         end,
         destroy = function(self)
-          return self.ship:destroy()
+          if (self.ship) then
+            return self.ship:destroy()
+          end
         end,
         update = function(self, dt)
           if (btn(pico.x_key)) then
-            self.game_states:pop()
+            self.game_over = true
+            self.game_states:push(Play(self.game_states))
           end
           self.stars:update(dt)
           engine.update_camera()
@@ -544,7 +467,6 @@ end)({
               self.is_turning = false
             end
           end
-          printh(self.time)
           if (self.ship.model.z > 2.249 and self.dir == 1) then
             self.dir = -1
             self.is_turning = true
@@ -556,10 +478,15 @@ end)({
           end
         end,
         render = function(self, dt)
-          pico.bg(0)
           self.stars:render(dt)
           engine.draw_3d()
-          self:font("alien, E X P A N S I O N .", 17, 105)
+          local text
+          if self.game_over then
+            text = "you, D I E D ."
+          else
+            text = "alien, E X P A N S I O N ."
+          end
+          self:font(text, 17, 105)
           return self:font("press, \151", 17, 20)
         end,
         font = function(self, text, x, y)
@@ -571,6 +498,7 @@ end)({
       _class_0 = setmetatable({
         __init = function(self, game_states)
           self.game_states = game_states
+          self.game_over = false
         end,
         __base = _base_0,
         __name = "Menu"
@@ -603,7 +531,8 @@ end)({
       local _class_0
       local _base_0 = {
         create = function(self)
-          self.ship = Player()
+          self.health = 1
+          self.ship = Player(self)
           self.ship_colors = {
             2,
             4,
@@ -614,52 +543,85 @@ end)({
             12,
             14
           }
+          self.score = 0
           self.ships = { }
           for i = 1, 2 do
             self:new_ship(i)
           end
           self.stars = Stars()
-          self.health = 1
         end,
-        new_ship = function(self, i)
+        new_ship = function(self, i, score)
+          if score == nil then
+            score = 10
+          end
           if (self.ships[i]) then
+            self.score = self.score + score
             self.ships[i]:destroy()
             self.ships[i] = nil
           end
           self.ships[i] = Ship(self.ship_colors[pico.random(1, #self.ship_colors)])
           self.ships[i].model.x = pico.random(-10, 10)
           self.ships[i].model.y = pico.random(-10, 10)
-          self.ships[i].model.z = pico.random(-30, -25)
+          self.ships[i].model.z = pico.random(-35, -30)
         end,
-        destroy = function(self) end,
+        destroy = function(self)
+          self.ship:destroy()
+          for i = 1, 2 do
+            self.ships[i]:destroy()
+          end
+        end,
         update = function(self, dt)
           for key, ship in pairs(self.ships) do
+            ship:update(dt)
             ship.model.z = ship.model.z + 0.1
             if (engine.intersect_bounding_box(self.ship.model, ship.model)) then
-              self.health = self.health - 0.001
+              self.health = self.health - 0.0035
+              self.ship:start_blink()
             end
             if (ship.model.z > 10) then
               self:new_ship(key)
+            end
+            if (self.ship.is_shooting) then
+              if (self.ship.shoot_location.x - self.ship.shoot_radius < ship.projection.x) then
+                if (ship.projection.x < self.ship.shoot_radius + self.ship.shoot_location.x) then
+                  self:new_ship(key, 40)
+                  self.health = self.health + 0.05
+                  sfx(4)
+                  if (self.health > 1) then
+                    self.health = 1
+                  end
+                end
+              end
+              if (self.ship.shoot_location.y - self.ship.shoot_radius < ship.projection.y) then
+                if (ship.projection.y < self.ship.shoot_radius + self.ship.shoot_location.y) then
+                  self:new_ship(key, 40)
+                  self.health = self.health + 0.05
+                  sfx(4)
+                  if (self.health > 1) then
+                    self.health = 1
+                  end
+                end
+              end
             end
           end
           self.stars:update(dt)
           self.ship:update(dt)
           self.stars:set_direction(self.ship:direction_x(), self.ship:direction_y())
+          self:check_dead()
           engine.update_camera()
           return engine.update_3d()
         end,
         render = function(self, dt)
-          pico.bg(0)
           self.stars:render(dt)
-          if (self.ship.model.ax > .0274) then
-            engine.draw_3d()
-            self.ship:render(dt)
-          else
-            self.ship:render(dt)
-            engine.draw_3d()
-          end
+          self.ship:render(dt)
+          engine.draw_3d()
           self:draw_life()
           return self:draw_abduct()
+        end,
+        check_dead = function(self)
+          if (self.health <= 0) then
+            return self.game_states:pop()
+          end
         end,
         draw_life = function(self, x, y, width, height)
           if x == nil then
@@ -693,7 +655,7 @@ end)({
             y = 10
           end
           print("score", x + 2, y - 7, 7)
-          return print("123", x + 2, y, 7)
+          return print(tostring(self.score), x + 2, y, 7)
         end
       }
       _base_0.__index = _base_0
@@ -719,964 +681,7 @@ end)({
     }
   end;
   ['engine'] = function()
-    ----Electric Gryphon's 3D Library----
-    ----https://github.com/electricgryphon/Pico-8-Gryphon-3D-Engine-Library----
-    ----From https://www.lexaloffle.com/bbs/?tid=28077----
-    ----NOTE: Modified to reduce token usage----
-    
-    hex_string_data = "0123456789abcdef"
-    char_to_hex = {}
-    for i=1,#hex_string_data do
-        char_to_hex[sub(hex_string_data,i,i)]=i-1
-    end
-    
-    function read_byte(string)
-        return char_to_hex[sub(string,1,1)]*16+char_to_hex[sub(string,2,2)]
-    end
-    
-    function read_2byte_fixed(string)
-        local a=read_byte(sub(string,1,2))
-        local b=read_byte(sub(string,3,4))
-        local val =a*256+b
-        return val/256
-    end
-    
-    cur_string=""
-    cur_string_index=1
-    function load_string(string)
-        cur_string=string
-        cur_string_index=1
-    end
-    
-    function read_vector()
-        v={}
-        for i=1,3 do
-            text=sub(cur_string,cur_string_index,cur_string_index+4)
-            value=read_2byte_fixed(text)
-            v[i]=value
-            cur_string_index+=4
-        end
-        return v
-    end
-    
-    function read_face()
-        f={}
-        for i=1,3 do
-            text=sub(cur_string,cur_string_index,cur_string_index+2)
-            value=read_byte(text)
-            f[i]=value
-            cur_string_index+=2
-        end
-        return f
-    end
-    
-    function read_vector_string(string)
-        vector_list={}
-        load_string(string)
-        while(cur_string_index<#string)do
-            vector=read_vector()
-            add(vector_list,vector)
-        end
-            return vector_list
-    end
-    
-    function read_face_string(string)
-        face_list={}
-        load_string(string)
-        while(cur_string_index<#string)do
-            face=read_face()
-            add(face_list,face)
-        end
-            return face_list
-    end
-    ------------------------------------------------------------end hex string data handling--------------------------------
-    
-    
-    -------------------------------------------------------------BEGIN CUT HERE-------------------------------------------------
-    ------------------------------------------------------Electric Gryphon's 3D Library-----------------------------------------
-    ----------------------------------------------------------------------------------------------------------------------------
-    
-    k_color1=4
-    k_color2=5
-    
-    k_screen_scale=80
-    k_x_center=64
-    k_y_center=64
-    
-    
-    
-    z_clip=-3
-    z_max=-50
-    
-    k_min_x=0
-    k_max_x=128
-    k_min_y=0
-    k_max_y=128
-    
-    
-    
-    --These are used for the 2 scanline color shading scheme
-    double_color_list=  {{0,0,0,0,0,0,0,0,0,0},
-                         {0,0,0,0,0,0,0,0,0,0},
-    
-                        {0,0,1,1,1,1,13,13,12,12},
-                        {0,0,0,1,1,1,1,13,13,12},
-    
-                        {2,2,2,2,8,8,14,14,14,15},
-                        {0,1,1,2,2,8,8,8,14,14},
-    
-                        {1,1,1,1,3,3,11,11,10,10},
-                        {0,1,1,1,1,3,3,11,11,10},
-    
-                        {1,1,2,2,4,4,9,9,10,10},
-                        {0,1,1,2,2,4,4,9,9,10},
-    
-                        {0,0,1,1,5,5,13,13,6,6},
-                        {0,0,0,1,1,5,5,13,13,6},
-    
-                        {1,1,5,5,6,6,6,6,7,7},
-                        {0,1,1,5,5,6,6,6,6,7},
-    
-                        {5,5,6,6,7,7,7,7,7,7},
-                        {0,5,5,6,6,7,7,7,7,7},
-    
-                        {2,2,2,2,8,8,14,14,15,15},
-                        {0,2,2,2,2,8,8,14,14,15},
-    
-                        {2,2,4,4,9,9,15,15,7,7},
-                        {0,2,2,4,4,9,9,15,15,7},
-    
-                        {4,4,9,9,10,10,7,7,7,7},
-                        {0,4,4,9,9,10,10,7,7,7},
-    
-                        {1,1,3,3,11,11,10,10,7,7},
-                        {0,1,1,3,3,11,11,10,10,7},
-    
-                        {13,13,13,12,12,12,6,6,7,7},
-                        {0,5,13,13,12,12,12,6,6,7},
-    
-                        {1,1,5,5,13,13,6,6,7,7},
-                        {0,1,1,5,5,13,13,6,6,7},
-    
-                        {2,2,2,2,14,14,15,15,7,7},
-                        {0,2,2,2,2,14,14,15,15,7},
-    
-                        {4,4,9,9,15,15,7,7,7,7},
-                        {0,4,4,9,9,15,15,7,7,7}
-                        }
-    
-    
-    k_ambient=.3
-    function color_faces(object,base)
-        --local p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z
-    
-    
-            for i=1,#object.faces do
-                local face=object.faces[i]
-            --for face in all(object.faces)do
-                local p1x=object.t_vertices[face[1]][1]
-                local p1y=object.t_vertices[face[1]][2]
-                local p1z=object.t_vertices[face[1]][3]
-                local p2x=object.t_vertices[face[2]][1]
-                local p2y=object.t_vertices[face[2]][2]
-                local p2z=object.t_vertices[face[2]][3]
-                local p3x=object.t_vertices[face[3]][1]
-                local p3y=object.t_vertices[face[3]][2]
-                local p3z=object.t_vertices[face[3]][3]
-    
-    
-    
-                local nx,ny,nz = vector_cross_3d(p1x,p1y,p1z,
-                                    p2x,p2y,p2z,
-                                    p3x,p3y,p3z)
-    
-    
-            nx,ny,nz = normalize(nx,ny,nz)
-            local b = vector_dot_3d(nx,ny,nz,light1_x,light1_y,light1_z)
-            --see how closely the light vector and the face normal line up and shade appropriately
-    
-            -- print(nx.." "..ny.." "..nz,10,i*8+8,8)
-            -- flip()
-            if(object.color_mode==k_multi_color_dynamic)then
-                face[4],face[5]=color_shade(object.base_faces[i][4], mid( b,0,1)*(1-k_ambient)+k_ambient )
-            else
-                face[4],face[5]=color_shade(base, mid( b,0,1)*(1-k_ambient)+k_ambient )
-            end
-        end
-    
-    end
-    
-    
-    function color_shade(color,brightness)
-        --return double_color_list[ (color+1)*2-1 ][flr(brightness*10)] , double_color_list[ (color+1)*2 ][flr(brightness*10)]
-        local b= band(brightness*10,0xffff)
-        local c= (color+1)*2
-        return double_color_list[ c-1 ][b] , double_color_list[ c ][b]
-    end
-    
-    
-    
-    light1_x=.1
-    light1_y=.35
-    light1_z=.2
-    
-    --t_light gets written to
-    t_light_x=0
-    t_light_y=0
-    t_light_z=0
-    
-    function init_light()
-        light1_x,light1_y,light1_z=normalize(light1_x,light1_y,light1_z)
-    end
-    
-    function update_light()
-        t_light_x,t_light_y,t_light_z = rotate_cam_point(light1_x,light1_y,light1_z)
-    end
-    
-    function normalize(x,y,z)
-        local x1=shl(x,2)
-        local y1=shl(y,2)
-        local z1=shl(z,2)
-    
-        local inv_dist=1/sqrt(x1*x1+y1*y1+z1*z1)
-    
-        return x1*inv_dist,y1*inv_dist,z1*inv_dist
-    
-    end
-    
-    function    vector_dot_3d(ax,ay,az,bx,by,bz)
-        return ax*bx+ay*by+az*bz
-    end
-    
-    function    vector_cross_3d(px,py,pz,ax,ay,az,bx,by,bz)
-    
-         ax-=px
-         ay-=py
-         az-=pz
-         bx-=px
-         by-=py
-         bz-=pz
-    
-    
-        local dx=ay*bz-az*by
-        local dy=az*bx-ax*bz
-        local dz=ax*by-ay*bx
-        return dx,dy,dz
-    end
-    
-    
-    
-    k_colorize_static = 1
-    k_colorize_dynamic = 2
-    k_multi_color_static = 3
-    k_multi_color_dynamic = 4
-    k_preset_color = 5
-    
-    --Function load object:
-    --object_vertices: vertex list for object (see above)
-    --object_faces: face list for object (see above)
-    --x,y,z: translated center for the the object
-    --ax,ay,az: rotation of object about these axis
-    --obstacle: boolean will the player collide with this?
-    --color mode:
-    --k_colorize_static = 1 : shade the model at init with one shaded color
-    --k_colorize_dynamic = 2 : color the model dynamically with one shade color -- slow
-    --k_multi_color_static = 3 : shade the model based on colors defined in face list
-    --k_multi_color_dynamic = 4 : shade the model dynamically based on colors define din face list -- slow
-    --k_preset_color = 5 : use the colors defined in face list only -- no lighting effects
-    
-    function load_object(object_vertices,object_faces,x,y,z,ax,ay,az,obstacle,color_mode,color)
-        object=new_object()
-    
-        object.vertices=object_vertices
-    
-    
-        --make local deep copy of faces
-        --if we don't car about on-demand shading we can share faces
-        --but it means that objects will look wrong when rotated
-    
-        if(color_mode==k_preset_color)then
-            object.faces=object_faces
-        else
-            object.base_faces=object_faces
-            object.faces={}
-            for i=1,#object_faces do
-                object.faces[i]={}
-                for j=1,#object_faces[i] do
-                    object.faces[i][j]=object_faces[i][j]
-                end
-            end
-        end
-    
-    
-        object.radius=0
-    
-        --make local deep copy of translated vertices
-        --we share the initial vertices
-        for i=1,#object_vertices do
-            object.t_vertices[i]={}
-                for j=1,3 do
-                    object.t_vertices[i][j]=object.vertices[i][j]
-                end
-        end
-    
-        object.ax=ax or 0
-        object.ay=ay or 0
-        object.az=az or 0
-    
-        transform_object(object)
-    
-        set_radius(object)
-        set_bounding_box(object)
-    
-        object.x=x or 0
-        object.y=y or 0
-        object.z=z or 0
-    
-        object.color = color or 8
-        object.color_mode= color_mode or k_colorize_static
-    
-        object.obstacle = obstacle or false
-    
-        if(obstacle)add(obstacle_list,object)
-    
-        if(color_mode==k_colorize_static or color_mode==k_colorize_dynamic or color_mode==k_multi_color_static )then
-            color_faces(object,color)
-        end
-    
-    
-    
-        return object
-    end
-    
-    function set_radius(object)
-        for vertex in all(object.vertices) do
-            object.radius=max(object.radius,vertex[1]*vertex[1]+vertex[2]*vertex[2]+vertex[3]*vertex[3])
-        end
-        object.radius=sqrt(object.radius)
-    end
-    
-    function set_bounding_box(object)
-        for vertex in all(object.t_vertices) do
-    
-            object.min_x=min(vertex[1],object.min_x)
-            object.min_y=min(vertex[2],object.min_y)
-            object.min_z=min(vertex[3],object.min_z)
-            object.max_x=max(vertex[1],object.max_x)
-            object.max_y=max(vertex[2],object.max_y)
-            object.max_z=max(vertex[3],object.max_z)
-        end
-    
-    end
-    
-    function intersect_bounding_box(object_a, object_b)
-        return
-            ((object_a.min_x+object_a.x < object_b.max_x+object_b.x) and (object_a.max_x+object_a.x > object_b.min_x+object_b.x) and
-             (object_a.min_y+object_a.y < object_b.max_y+object_b.y) and (object_a.max_y+object_a.y > object_b.min_y+object_b.y) and
-             (object_a.min_z+object_a.z < object_b.max_z+object_b.z) and (object_a.max_z+object_a.z > object_b.min_z+object_b.z))
-    end
-    
-    function new_object()
-        object={}
-        object.vertices={}
-        object.faces={}
-    
-        object.t_vertices={}
-    
-    
-        object.x=0
-        object.y=0
-        object.z=0
-    
-        object.rx=0
-        object.ry=0
-        object.rz=0
-    
-        object.tx=0
-        object.ty=0
-        object.tz=0
-    
-        object.ax=0
-        object.ay=0
-        object.az=0
-    
-        object.sx=0
-        object.sy=0
-        object.radius=10
-        object.sradius=10
-        object.visible=true
-    
-        object.render=true
-        object.background=false
-        object.ring=false
-    
-        object.min_x=100
-        object.min_y=100
-        object.min_z=100
-    
-        object.max_x=-100
-        object.max_y=-100
-        object.max_z=-100
-    
-        object.vx=0
-        object.vy=0
-        object.vz=0
-    
-        add(object_list,object)
-        return object
-    
-    end
-    
-    function delete_object(object)
-        del(object_list,object)
-    end
-    
-    
-    function new_triangle(p1x,p1y,p2x,p2y,p3x,p3y,z,c1,c2)
-    
-        add(triangle_list,{p1x=p1x,
-                           p1y=p1y,
-                           p2x=p2x,
-                           p2y=p2y,
-                           p3x=p3x,
-                           p3y=p3y,
-                           tz=z,
-                           c1=c1,
-                           c2=c2})
-    
-    
-    
-    
-    end
-    
-    function draw_triangle_list()
-        --for t in all(triangle_list) do
-        for i=1,#triangle_list do
-            local t=triangle_list[i]
-            shade_trifill( t.p1x,t.p1y,t.p2x,t.p2y,t.p3x,t.p3y, t.c1,t.c2 )
-        end
-    end
-    
-    function update_visible(object)
-            object.visible=false
-    
-            local px,py,pz = object.x-cam_x,object.y-cam_y,object.z-cam_z
-            object.tx, object.ty, object.tz =rotate_cam_point(px,py,pz)
-    
-            object.sx,object.sy = project_point(object.tx,object.ty,object.tz)
-            object.sradius=project_radius(object.radius,object.tz)
-            object.visible= is_visible(object)
-    end
-    
-    function cam_transform_object(object)
-        if(object.visible)then
-    
-            for i=1, #object.vertices do
-                local vertex=object.t_vertices[i]
-    
-                vertex[1]+=object.x - cam_x
-                vertex[2]+=object.y - cam_y
-                vertex[3]+=object.z - cam_z
-    
-                vertex[1],vertex[2],vertex[3]=rotate_cam_point(vertex[1],vertex[2],vertex[3])
-    
-            end
-    
-    
-        end
-    end
-    
-    function transform_object(object)
-    
-    
-    
-    
-        if(object.visible)then
-            generate_matrix_transform(object.ax,object.ay,object.az)
-            for i=1, #object.vertices do
-                local t_vertex=object.t_vertices[i]
-                local vertex=object.vertices[i]
-    
-                t_vertex[1],t_vertex[2],t_vertex[3]=rotate_point(vertex[1],vertex[2],vertex[3])
-    
-            end
-    
-    
-        end
-    end
-    
-    function generate_matrix_transform(xa,ya,za)
-    
-    
-        local sx=sin(xa)
-        local sy=sin(ya)
-        local sz=sin(za)
-        local cx=cos(xa)
-        local cy=cos(ya)
-        local cz=cos(za)
-    
-        mat00=cz*cy
-        mat10=-sz
-        mat20=cz*sy
-        mat01=cx*sz*cy+sx*sy
-        mat11=cx*cz
-        mat21=cx*sz*sy-sx*cy
-        mat02=sx*sz*cy-cx*sy
-        mat12=sx*cz
-        mat22=sx*sz*sy+cx*cy
-    
-    end
-    
-    function generate_cam_matrix_transform(xa,ya,za)
-    
-    
-        local sx=sin(xa)
-        local sy=sin(ya)
-        local sz=sin(za)
-        local cx=cos(xa)
-        local cy=cos(ya)
-        local cz=cos(za)
-    
-        cam_mat00=cz*cy
-        cam_mat10=-sz
-        cam_mat20=cz*sy
-        cam_mat01=cx*sz*cy+sx*sy
-        cam_mat11=cx*cz
-        cam_mat21=cx*sz*sy-sx*cy
-        cam_mat02=sx*sz*cy-cx*sy
-        cam_mat12=sx*cz
-        cam_mat22=sx*sz*sy+cx*cy
-    
-    end
-    
-    function    matrix_inverse()
-        local det = mat00* (mat11 * mat22- mat21 * mat12) -
-                    mat01* (mat10 * mat22- mat12 * mat20) +
-                    mat02* (mat10 * mat21- mat11 * mat20)
-        local invdet=2/det
-    
-    
-    
-            mat00,mat01,mat02,mat10,mat11,mat12,mat20,mat21,mat22=(mat11 * mat22 - mat21 * mat12) * invdet,(mat02 * mat21 - mat01 * mat22) * invdet,(mat01 * mat12 - mat02 * mat11) * invdet,(mat12 * mat20 - mat10 * mat22) * invdet,(mat00 * mat22 - mat02 * mat20) * invdet,(mat10 * mat02 - mat00 * mat12) * invdet,(mat10 * mat21 - mat20 * mat11) * invdet,(mat20 * mat01 - mat00 * mat21) * invdet,(mat00 * mat11 - mat10 * mat01) * invdet
-    
-            --uh yeah I looked this one up :-)
-    end
-    
-    function rotate_point(x,y,z)
-        return (x)*mat00+(y)*mat10+(z)*mat20,(x)*mat01+(y)*mat11+(z)*mat21,(x)*mat02+(y)*mat12+(z)*mat22
-    end
-    
-    function rotate_cam_point(x,y,z)
-        return (x)*cam_mat00+(y)*cam_mat10+(z)*cam_mat20,(x)*cam_mat01+(y)*cam_mat11+(z)*cam_mat21,(x)*cam_mat02+(y)*cam_mat12+(z)*cam_mat22
-    end
-    
-    function is_visible(object)
-    
-        if(object.tz+object.radius>z_max and object.tz-object.radius<z_clip and
-           object.sx+object.sradius>0 and object.sx-object.sradius<128 and
-           object.sy+object.sradius>0 and object.sy-object.sradius<128 )
-           then return true else return false end
-    end
-    
-    function    cross_product_2d(p0x,p0y,p1x,p1y,p2x,p2y)
-        return ( ( (p0x-p1x)*(p2y-p1y)-(p0y-p1y)*(p2x-p1x)) > 0 )
-    end
-    
-    function render_object(object)
-    
-        --project all points in object to screen space
-        --it's faster to go through the array linearly than to use a for all()
-        for i=1, #object.t_vertices do
-            local vertex=object.t_vertices[i]
-            vertex[4],vertex[5] = vertex[1]*k_screen_scale/vertex[3]+k_x_center,vertex[2]*k_screen_scale/vertex[3]+k_x_center
-        end
-    
-        for i=1,#object.faces do
-        --for face in all(object.faces) do
-            local face=object.faces[i]
-    
-            local p1=object.t_vertices[face[1]]
-            local p2=object.t_vertices[face[2]]
-            local p3=object.t_vertices[face[3]]
-    
-            local p1x,p1y,p1z=p1[1],p1[2],p1[3]
-            local p2x,p2y,p2z=p2[1],p2[2],p2[3]
-            local p3x,p3y,p3z=p3[1],p3[2],p3[3]
-    
-    
-            local cz=.01*(p1z+p2z+p3z)/3
-            local cx=.01*(p1x+p2x+p3x)/3
-            local cy=.01*(p1y+p2y+p3y)/3
-            local z_paint= -cx*cx-cy*cy-cz*cz
-    
-    
-    
-    
-            if(object.background==true) z_paint-=1000
-            face[6]=z_paint
-    
-    
-            if((p1z>z_max or p2z>z_max or p3z>z_max))then
-                if(p1z< z_clip and p2z< z_clip and p3z< z_clip)then
-                --simple option -- no clipping required
-    
-                        local s1x,s1y = p1[4],p1[5]
-                        local s2x,s2y = p2[4],p2[5]
-                        local s3x,s3y = p3[4],p3[5]
-    
-    
-                        if( max(s3x,max(s1x,s2x))>0 and min(s3x,min(s1x,s2x))<128)  then
-                            --only use backface culling on simple option without clipping
-                            --check if triangles are backwards by cross of two vectors
-                            if(( (s1x-s2x)*(s3y-s2y)-(s1y-s2y)*(s3x-s2x)) < 0)then
-    
-                                if(object.color_mode==k_colorize_dynamic)then
-                                    --nx,ny,nz = vector_cross_3d(p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z)
-                                    --save a bit on dynamic rendering by moving this funciton inline
-                                    p2x-=p1x p2y-=p1y p2z-=p1z
-                                    p3x-=p1x p3y-=p1y p3z-=p1z
-                                    local nx = p2y*p3z-p2z*p3y
-                                    local ny = p2z*p3x-p2x*p3z
-                                    local nz = p2x*p3y-p2y*p3x
-    
-                                    --nx,ny,nz = normalize(nx,ny,nz)
-                                    --save a bit by moving this function inline
-                                    nx=shl(nx,2) ny=shl(ny,2) nz=shl(nz,2)
-                                    local inv_dist=1/sqrt(nx*nx+ny*ny+nz*nz)
-                                    nx*=inv_dist ny*=inv_dist nz*=inv_dist
-    
-    
-                                    --b = vector_dot_3d(nx,ny,nz,t_light_x,t_light_y,t_light_z)
-                                    --save a bit by moving this function inline
-                                    face[4],face[5]=color_shade(object.color, mid( nx*t_light_x+ny*t_light_y+nz*t_light_z,0,1)*(1-k_ambient)+k_ambient )
-                                end
-    
-    
-                                --new_triangle(s1x,s1y,s2x,s2y,s3x,s3y,z_paint,face[k_color1],face[k_color2])
-                                --faster to move new triangle function inline
-                                add(triangle_list,{p1x=s1x,
-                                                    p1y=s1y,
-                                                    p2x=s2x,
-                                                    p2y=s2y,
-                                                    p3x=s3x,
-                                                    p3y=s3y,
-                                                    tz=z_paint,
-                                                    c1=face[k_color1],
-                                                    c2=face[k_color2]})
-    
-    
-                            end
-                        end
-    
-                --not optimizing clipping functions for now
-                --these still have errors for large triangles
-                elseif(p1z< z_clip or p2z< z_clip or p3z< z_clip)then
-    
-                --either going to have 3 or 4 points
-                    p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z = three_point_sort(p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z)
-                    if(p1z<z_clip and p2z<z_clip)then
-    
-    
-    
-                        local n2x,n2y,n2z = z_clip_line(p2x,p2y,p2z,p3x,p3y,p3z,z_clip)
-                        local n3x,n3y,n3z = z_clip_line(p3x,p3y,p3z,p1x,p1y,p1z,z_clip)
-    
-    
-    
-                        local s1x,s1y = project_point(p1x,p1y,p1z)
-                        local s2x,s2y = project_point(p2x,p2y,p2z)
-                        local s3x,s3y = project_point(n2x,n2y,n2z)
-                        local s4x,s4y = project_point(n3x,n3y,n3z)
-    
-    
-                        if( max(s4x,max(s1x,s2x))>0 and min(s4x,min(s1x,s2x))<128)  then
-                            new_triangle(s1x,s1y,s2x,s2y,s4x,s4y,z_paint,face[k_color1],face[k_color2])
-                        end
-                        if( max(s4x,max(s3x,s2x))>0 and min(s4x,min(s3x,s2x))<128)  then
-                            new_triangle(s2x,s2y,s4x,s4y,s3x,s3y,z_paint,face[k_color1],face[k_color2])
-                        end
-                    else
-    
-    
-                        local n1x,n1y,n1z = z_clip_line(p1x,p1y,p1z,p2x,p2y,p2z,z_clip)
-                        local n2x,n2y,n2z = z_clip_line(p1x,p1y,p1z,p3x,p3y,p3z,z_clip)
-    
-    
-    
-                        local s1x,s1y = project_point(p1x,p1y,p1z)
-                        local s2x,s2y = project_point(n1x,n1y,n1z)
-                        local s3x,s3y = project_point(n2x,n2y,n2z)
-    
-                        --solid_trifill(s1x,s1y,s2x,s2y,s3x,s3y,face[k_color1])
-                        if( max(s3x,max(s1x,s2x))>0 and min(s3x,min(s1x,s2x))<128)  then
-                            new_triangle(s1x,s1y,s2x,s2y,s3x,s3y,z_paint,face[k_color1],face[k_color2])
-                        end
-                    end
-    
-                    --print("p1",p1x+64,p1z+64,14)
-                    --print("p2",p2x+64,p2z+64,14)
-                    --print("p3",p3x+64,p3z+64,14)
-    
-    
-    
-                end
-            end
-    
-        end
-    
-    
-    end
-    
-    function three_point_sort(p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z)
-        if(p1z>p2z) p1z,p2z = p2z,p1z p1x,p2x = p2x,p1x p1y,p2y = p2y,p1y
-        if(p1z>p3z) p1z,p3z = p3z,p1z p1x,p3x = p3x,p1x p1y,p3y = p3y,p1y
-        if(p2z>p3z) p2z,p3z = p3z,p2z p2x,p3x = p3x,p2x p2y,p3y = p3y,p2y
-    
-        return p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z
-    end
-    
-    function quicksort(t, start, endi)
-       start, endi = start or 1, endi or #t
-      --partition w.r.t. first element
-      if(endi - start < 1) then return t end
-      local pivot = start
-      for i = start + 1, endi do
-        if t[i].tz <= t[pivot].tz then
-          if i == pivot + 1 then
-            t[pivot],t[pivot+1] = t[pivot+1],t[pivot]
-          else
-            t[pivot],t[pivot+1],t[i] = t[i],t[pivot],t[pivot+1]
-          end
-          pivot = pivot + 1
-        end
-      end
-       t = quicksort(t, start, pivot - 1)
-      return quicksort(t, pivot + 1, endi)
-    end
-    
-    
-    
-    function z_clip_line(p1x,p1y,p1z,p2x,p2y,p2z,clip)
-        if(p1z>p2z)then
-            p1x,p2x=p2x,p1x
-            p1z,p2z=p2z,p1z
-            p1y,p2y=p2y,p1y
-        end
-    
-        if(clip>p1z and clip<=p2z)then
-    
-        --  line(p1x+64,p1z+64,p2x+64,p2z+64,14)
-            alpha= abs((p1z-clip)/(p2z-p1z))
-            nx=lerp(p1x,p2x,alpha)
-            ny=lerp(p1y,p2y,alpha)
-            nz=lerp(p1z,p2z,alpha)
-    
-        --  circ(nx+64,nz+64,1,12)
-            return nx,ny,nz
-        else
-            return false
-        end
-    end
-    
-    function project_point(x,y,z)
-        return x*k_screen_scale/z+k_x_center,y*k_screen_scale/z+k_x_center
-    end
-    
-    function project_radius(r,z)
-        return r*k_screen_scale/abs(z)
-    end
-    
-    
-    
-    function lerp(a,b,alpha)
-      return a*(1.0-alpha)+b*alpha
-    end
-    
-    function init_player()
-        player=new_object()
-        player.min_x=-4.5
-        player.min_y=-4.5
-        player.min_z=-4.5
-        player.max_x=4.5
-        player.max_y=4.5
-        player.max_z=4.5
-    
-        player.x=0
-        player.y=8
-        player.z=15
-    
-        player.vx=0
-        player.vy=0
-        player.vz=0
-    end
-    
-    k_friction=.7
-    function update_camera()
-        cam_x=player.x
-        cam_y=player.y
-        cam_z=player.z
-    
-        cam_ax=player.ax
-        cam_ay=player.ay
-        cam_az=player.az
-    
-        generate_cam_matrix_transform(cam_ax,cam_ay,cam_az)
-    end
-    
-    function init_3d()
-        init_player()
-        init_light()
-        object_list={}
-        obstacle_list={}
-    end
-    
-    function update_3d()
-        for object in all(object_list) do
-                update_visible(object)
-                transform_object(object)
-                cam_transform_object(object)
-                update_light()
-        end
-    end
-    
-    function draw_3d()
-        triangle_list={}
-        quicksort(object_list)
-    
-        start_timer()
-        for object in all(object_list) do
-    
-            if(object.visible and not object.background) then
-                render_object(object) --sort_faces(object)
-                --if(object.color_mode==k_colorize_dynamic or object.color_mode==k_multi_color_dynamic) color_faces(object,object.color)
-            end
-        end
-        render_time=stop_timer()
-    
-        start_timer()
-            quicksort(triangle_list)
-        sort_time=stop_timer()
-    
-        start_timer()
-            draw_triangle_list()
-        triangle_time=stop_timer()
-    end
-    
-    
-    function shade_trifill( x1,y1,x2,y2,x3,y3, color1, color2)
-    
-              local x1=band(x1,0xffff)
-              local x2=band(x2,0xffff)
-              local y1=band(y1,0xffff)
-              local y2=band(y2,0xffff)
-              local x3=band(x3,0xffff)
-              local y3=band(y3,0xffff)
-    
-              local nsx,nex
-              --sort y1,y2,y3
-              if(y1>y2)then
-                y1,y2=y2,y1
-                x1,x2=x2,x1
-              end
-    
-              if(y1>y3)then
-                y1,y3=y3,y1
-                x1,x3=x3,x1
-              end
-    
-              if(y2>y3)then
-                y2,y3=y3,y2
-                x2,x3=x3,x2
-              end
-    
-             if(y1!=y2)then
-                local delta_sx=(x3-x1)/(y3-y1)
-                local delta_ex=(x2-x1)/(y2-y1)
-    
-                if(y1>0)then
-                    nsx=x1
-                    nex=x1
-                    min_y=y1
-                else --top edge clip
-                    nsx=x1-delta_sx*y1
-                    nex=x1-delta_ex*y1
-                    min_y=0
-                end
-    
-                max_y=min(y2,128)
-    
-                for y=min_y,max_y-1 do
-    
-                --rectfill(nsx,y,nex,y,color1)
-                if(band(y,1)==0)then rectfill(nsx,y,nex,y,color1) else rectfill(nsx,y,nex,y,color2) end
-                nsx+=delta_sx
-                nex+=delta_ex
-                end
-    
-            else --where top edge is horizontal
-                nsx=x1
-                nex=x2
-            end
-    
-    
-            if(y3!=y2)then
-                local delta_sx=(x3-x1)/(y3-y1)
-                local delta_ex=(x3-x2)/(y3-y2)
-    
-                min_y=y2
-                max_y=min(y3,128)
-                if(y2<0)then
-                    nex=x2-delta_ex*y2
-                    nsx=x1-delta_sx*y1
-                    min_y=0
-                end
-    
-                 for y=min_y,max_y do
-    
-                    --rectfill(nsx,y,nex,y,color1)
-                    if(band(y,1)==0)then rectfill(nsx,y,nex,y,color1) else rectfill(nsx,y,nex,y,color2) end
-                    nex+=delta_ex
-                    nsx+=delta_sx
-                 end
-    
-            else --where bottom edge is horizontal
-                --rectfill(nsx,y3,nex,y3,color1)
-                if(band(y,1)==0)then rectfill(nsx,y3,nex,y3,color1) else rectfill(nsx,y3,nex,y3,color2) end
-            end
-    
-    end
-    
-    function start_timer()
-        timer_value=stat(1)
-    end
-    
-    function stop_timer()
-        return stat(1)-timer_value
-    end
-    
-    function camera()
-        return player
-    end
-    
-    return {
-       init_player = init_player,
-       update_player = update_player,
-       update_camera = update_camera,
-       handle_buttons = handle_buttons,
-       init_3d = init_3d,
-       update_3d = update_3d,
-       draw_3d = draw_3d,
-       read_vector_string = read_vector_string,
-       read_face_string = read_face_string,
-       load_object = load_object,
-       matrix_inverse = matrix_inverse,
-       camera_matrix_transform = camera_matrix_transform,
-       rotate_point = rotate_point,
-       camera = camera,
-       project_point = project_point,
-       intersect_bounding_box = intersect_bounding_box,
-       delete_object = delete_object
-    }
+    hex_string_data="0123456789abcdef"char_to_hex={}for a=1,#hex_string_data do char_to_hex[sub(hex_string_data,a,a)]=a-1 end;function read_byte(b)return char_to_hex[sub(b,1,1)]*16+char_to_hex[sub(b,2,2)]end;function read_2byte_fixed(b)local c=read_byte(sub(b,1,2))local d=read_byte(sub(b,3,4))local e=c*256+d;return e/256 end;cur_string=""cur_string_index=1;function load_string(b)cur_string=b;cur_string_index=1 end;function read_vector()v={}for a=1,3 do text=sub(cur_string,cur_string_index,cur_string_index+4)value=read_2byte_fixed(text)v[a]=value;cur_string_index=cur_string_index+4 end;return v end;function read_face()f={}for a=1,3 do text=sub(cur_string,cur_string_index,cur_string_index+2)value=read_byte(text)f[a]=value;cur_string_index=cur_string_index+2 end;return f end;function read_vector_string(b)vector_list={}load_string(b)while cur_string_index<#b do vector=read_vector()add(vector_list,vector)end;return vector_list end;function read_face_string(b)face_list={}load_string(b)while cur_string_index<#b do face=read_face()add(face_list,face)end;return face_list end;k_color1=4;k_color2=5;k_screen_scale=80;k_x_center=64;k_y_center=64;z_clip=-3;z_max=-50;k_min_x=0;k_max_x=128;k_min_y=0;k_max_y=128;double_color_list={{0,0,0,0,0,0,0,0,0,0},{0,0,0,0,0,0,0,0,0,0},{0,0,1,1,1,1,13,13,12,12},{0,0,0,1,1,1,1,13,13,12},{2,2,2,2,8,8,14,14,14,15},{0,1,1,2,2,8,8,8,14,14},{1,1,1,1,3,3,11,11,10,10},{0,1,1,1,1,3,3,11,11,10},{1,1,2,2,4,4,9,9,10,10},{0,1,1,2,2,4,4,9,9,10},{0,0,1,1,5,5,13,13,6,6},{0,0,0,1,1,5,5,13,13,6},{1,1,5,5,6,6,6,6,7,7},{0,1,1,5,5,6,6,6,6,7},{5,5,6,6,7,7,7,7,7,7},{0,5,5,6,6,7,7,7,7,7},{2,2,2,2,8,8,14,14,15,15},{0,2,2,2,2,8,8,14,14,15},{2,2,4,4,9,9,15,15,7,7},{0,2,2,4,4,9,9,15,15,7},{4,4,9,9,10,10,7,7,7,7},{0,4,4,9,9,10,10,7,7,7},{1,1,3,3,11,11,10,10,7,7},{0,1,1,3,3,11,11,10,10,7},{13,13,13,12,12,12,6,6,7,7},{0,5,13,13,12,12,12,6,6,7},{1,1,5,5,13,13,6,6,7,7},{0,1,1,5,5,13,13,6,6,7},{2,2,2,2,14,14,15,15,7,7},{0,2,2,2,2,14,14,15,15,7},{4,4,9,9,15,15,7,7,7,7},{0,4,4,9,9,15,15,7,7,7}}k_ambient=.3;function color_faces(object,g)for a=1,#object.faces do local face=object.faces[a]local h=object.t_vertices[face[1]][1]local i=object.t_vertices[face[1]][2]local j=object.t_vertices[face[1]][3]local k=object.t_vertices[face[2]][1]local l=object.t_vertices[face[2]][2]local m=object.t_vertices[face[2]][3]local n=object.t_vertices[face[3]][1]local o=object.t_vertices[face[3]][2]local p=object.t_vertices[face[3]][3]local nx,ny,nz=vector_cross_3d(h,i,j,k,l,m,n,o,p)nx,ny,nz=normalize(nx,ny,nz)local d=vector_dot_3d(nx,ny,nz,light1_x,light1_y,light1_z)if object.color_mode==k_multi_color_dynamic then face[4],face[5]=color_shade(object.base_faces[a][4],mid(d,0,1)*(1-k_ambient)+k_ambient)else face[4],face[5]=color_shade(g,mid(d,0,1)*(1-k_ambient)+k_ambient)end end end;function color_shade(q,r)local d=band(r*10,0xffff)local s=(q+1)*2;return double_color_list[s-1][d],double_color_list[s][d]end;light1_x=.1;light1_y=.35;light1_z=.2;t_light_x=0;t_light_y=0;t_light_z=0;function init_light()light1_x,light1_y,light1_z=normalize(light1_x,light1_y,light1_z)end;function update_light()t_light_x,t_light_y,t_light_z=rotate_cam_point(light1_x,light1_y,light1_z)end;function normalize(t,y,u)local w=shl(t,2)local x=shl(y,2)local z=shl(u,2)local A=1/sqrt(w*w+x*x+z*z)return w*A,x*A,z*A end;function vector_dot_3d(B,C,D,E,F,G)return B*E+C*F+D*G end;function vector_cross_3d(H,I,J,B,C,D,E,F,G)B=B-H;C=C-I;D=D-J;E=E-H;F=F-I;G=G-J;local K=C*G-D*F;local L=D*E-B*G;local M=B*F-C*E;return K,L,M end;k_colorize_static=1;k_colorize_dynamic=2;k_multi_color_static=3;k_multi_color_dynamic=4;k_preset_color=5;function load_object(N,O,t,y,u,B,C,D,P,Q,q)object=new_object()object.vertices=N;if Q==k_preset_color then object.faces=O else object.base_faces=O;object.faces={}for a=1,#O do object.faces[a]={}for R=1,#O[a]do object.faces[a][R]=O[a][R]end end end;object.radius=0;for a=1,#N do object.t_vertices[a]={}for R=1,3 do object.t_vertices[a][R]=object.vertices[a][R]end end;object.ax=B or 0;object.ay=C or 0;object.az=D or 0;transform_object(object)set_radius(object)set_bounding_box(object)object.x=t or 0;object.y=y or 0;object.z=u or 0;object.color=q or 8;object.color_mode=Q or k_colorize_static;object.obstacle=P or false;if P then add(obstacle_list,object)end;if Q==k_colorize_static or Q==k_colorize_dynamic or Q==k_multi_color_static then color_faces(object,q)end;return object end;function set_radius(object)for S in all(object.vertices)do object.radius=max(object.radius,S[1]*S[1]+S[2]*S[2]+S[3]*S[3])end;object.radius=sqrt(object.radius)end;function set_bounding_box(object)for S in all(object.t_vertices)do object.min_x=min(S[1],object.min_x)object.min_y=min(S[2],object.min_y)object.min_z=min(S[3],object.min_z)object.max_x=max(S[1],object.max_x)object.max_y=max(S[2],object.max_y)object.max_z=max(S[3],object.max_z)end end;function intersect_bounding_box(T,U)return T.min_x+T.x<U.max_x+U.x and T.max_x+T.x>U.min_x+U.x and T.min_y+T.y<U.max_y+U.y and T.max_y+T.y>U.min_y+U.y and T.min_z+T.z<U.max_z+U.z and T.max_z+T.z>U.min_z+U.z end;function new_object()object={}object.vertices={}object.faces={}object.t_vertices={}object.x=0;object.y=0;object.z=0;object.tx=0;object.ty=0;object.tz=0;object.ax=0;object.ay=0;object.az=0;object.sx=0;object.sy=0;object.radius=10;object.sradius=10;object.visible=true;object.background=false;object.min_x=100;object.min_y=100;object.min_z=100;object.max_x=-100;object.max_y=-100;object.max_z=-100;add(object_list,object)return object end;function delete_object(object)del(object_list,object)end;function new_triangle(h,i,k,l,n,o,u,V,W)add(triangle_list,{p1x=h,p1y=i,p2x=k,p2y=l,p3x=n,p3y=o,tz=u,c1=V,c2=W})end;function draw_triangle_list()for a=1,#triangle_list do local X=triangle_list[a]shade_trifill(X.p1x,X.p1y,X.p2x,X.p2y,X.p3x,X.p3y,X.c1,X.c2)end end;function update_visible(object)object.visible=false;local H,I,J=object.x-cam_x,object.y-cam_y,object.z-cam_z;object.tx,object.ty,object.tz=rotate_cam_point(H,I,J)object.sx,object.sy=project_point(object.tx,object.ty,object.tz)object.sradius=project_radius(object.radius,object.tz)object.visible=is_visible(object)end;function cam_transform_object(object)if object.visible then for a=1,#object.vertices do local S=object.t_vertices[a]S[1]=S[1]+object.x-cam_x;S[2]=S[2]+object.y-cam_y;S[3]=S[3]+object.z-cam_z;S[1],S[2],S[3]=rotate_cam_point(S[1],S[2],S[3])end end end;function transform_object(object)if object.visible then generate_matrix_transform(object.ax,object.ay,object.az)for a=1,#object.vertices do local Y=object.t_vertices[a]local S=object.vertices[a]Y[1],Y[2],Y[3]=rotate_point(S[1],S[2],S[3])end end end;function generate_matrix_transform(Z,_,a0)local a1=sin(Z)local a2=sin(_)local a3=sin(a0)local a4=cos(Z)local a5=cos(_)local a6=cos(a0)mat00=a6*a5;mat10=-a3;mat20=a6*a2;mat01=a4*a3*a5+a1*a2;mat11=a4*a6;mat21=a4*a3*a2-a1*a5;mat02=a1*a3*a5-a4*a2;mat12=a1*a6;mat22=a1*a3*a2+a4*a5 end;function generate_cam_matrix_transform(Z,_,a0)local a1=sin(Z)local a2=sin(_)local a3=sin(a0)local a4=cos(Z)local a5=cos(_)local a6=cos(a0)cam_mat00=a6*a5;cam_mat10=-a3;cam_mat20=a6*a2;cam_mat01=a4*a3*a5+a1*a2;cam_mat11=a4*a6;cam_mat21=a4*a3*a2-a1*a5;cam_mat02=a1*a3*a5-a4*a2;cam_mat12=a1*a6;cam_mat22=a1*a3*a2+a4*a5 end;function matrix_inverse()local a7=mat00*(mat11*mat22-mat21*mat12)-mat01*(mat10*mat22-mat12*mat20)+mat02*(mat10*mat21-mat11*mat20)local a8=2/a7;mat00,mat01,mat02,mat10,mat11,mat12,mat20,mat21,mat22=(mat11*mat22-mat21*mat12)*a8,(mat02*mat21-mat01*mat22)*a8,(mat01*mat12-mat02*mat11)*a8,(mat12*mat20-mat10*mat22)*a8,(mat00*mat22-mat02*mat20)*a8,(mat10*mat02-mat00*mat12)*a8,(mat10*mat21-mat20*mat11)*a8,(mat20*mat01-mat00*mat21)*a8,(mat00*mat11-mat10*mat01)*a8 end;function rotate_point(t,y,u)return t*mat00+y*mat10+u*mat20,t*mat01+y*mat11+u*mat21,t*mat02+y*mat12+u*mat22 end;function rotate_cam_point(t,y,u)return t*cam_mat00+y*cam_mat10+u*cam_mat20,t*cam_mat01+y*cam_mat11+u*cam_mat21,t*cam_mat02+y*cam_mat12+u*cam_mat22 end;function is_visible(object)if object.tz+object.radius>z_max and object.tz-object.radius<z_clip and object.sx+object.sradius>0 and object.sx-object.sradius<128 and object.sy+object.sradius>0 and object.sy-object.sradius<128 then return true else return false end end;function cross_product_2d(a9,aa,h,i,k,l)return(a9-h)*(l-i)-(aa-i)*(k-h)>0 end;function render_object(object)for a=1,#object.t_vertices do local S=object.t_vertices[a]S[4],S[5]=S[1]*k_screen_scale/S[3]+k_x_center,S[2]*k_screen_scale/S[3]+k_x_center end;for a=1,#object.faces do local face=object.faces[a]local ab=object.t_vertices[face[1]]local ac=object.t_vertices[face[2]]local ad=object.t_vertices[face[3]]local h,i,j=ab[1],ab[2],ab[3]local k,l,m=ac[1],ac[2],ac[3]local n,o,p=ad[1],ad[2],ad[3]local a6=.01*(j+m+p)/3;local a4=.01*(h+k+n)/3;local a5=.01*(i+l+o)/3;local ae=-a4*a4-a5*a5-a6*a6;if object.background==true then ae=ae-1000 end;face[6]=ae;if j>z_max or m>z_max or p>z_max then if j<z_clip and m<z_clip and p<z_clip then local af,ag=ab[4],ab[5]local ah,ai=ac[4],ac[5]local aj,ak=ad[4],ad[5]if max(aj,max(af,ah))>0 and min(aj,min(af,ah))<128 then if(af-ah)*(ak-ai)-(ag-ai)*(aj-ah)<0 then if object.color_mode==k_colorize_dynamic then k=k-h;l=l-i;m=m-j;n=n-h;o=o-i;p=p-j;local nx=l*p-m*o;local ny=m*n-k*p;local nz=k*o-l*n;nx=shl(nx,2)ny=shl(ny,2)nz=shl(nz,2)local A=1/sqrt(nx*nx+ny*ny+nz*nz)nx=nx*A;ny=ny*A;nz=nz*A;face[4],face[5]=color_shade(object.color,mid(nx*t_light_x+ny*t_light_y+nz*t_light_z,0,1)*(1-k_ambient)+k_ambient)end;add(triangle_list,{p1x=af,p1y=ag,p2x=ah,p2y=ai,p3x=aj,p3y=ak,tz=ae,c1=face[k_color1],c2=face[k_color2]})end end elseif j<z_clip or m<z_clip or p<z_clip then h,i,j,k,l,m,n,o,p=three_point_sort(h,i,j,k,l,m,n,o,p)if j<z_clip and m<z_clip then local al,am,an=z_clip_line(k,l,m,n,o,p,z_clip)local ao,ap,aq=z_clip_line(n,o,p,h,i,j,z_clip)local af,ag=project_point(h,i,j)local ah,ai=project_point(k,l,m)local aj,ak=project_point(al,am,an)local ar,as=project_point(ao,ap,aq)if max(ar,max(af,ah))>0 and min(ar,min(af,ah))<128 then new_triangle(af,ag,ah,ai,ar,as,ae,face[k_color1],face[k_color2])end;if max(ar,max(aj,ah))>0 and min(ar,min(aj,ah))<128 then new_triangle(ah,ai,ar,as,aj,ak,ae,face[k_color1],face[k_color2])end else local at,au,av=z_clip_line(h,i,j,k,l,m,z_clip)local al,am,an=z_clip_line(h,i,j,n,o,p,z_clip)local af,ag=project_point(h,i,j)local ah,ai=project_point(at,au,av)local aj,ak=project_point(al,am,an)if max(aj,max(af,ah))>0 and min(aj,min(af,ah))<128 then new_triangle(af,ag,ah,ai,aj,ak,ae,face[k_color1],face[k_color2])end end end end end end;function three_point_sort(h,i,j,k,l,m,n,o,p)if j>m then j,m=m,j;h,k=k,h;i,l=l,i end;if j>p then j,p=p,j;h,n=n,h;i,o=o,i end;if m>p then m,p=p,m;k,n=n,k;l,o=o,l end;return h,i,j,k,l,m,n,o,p end;function quicksort(X,aw,ax)aw,ax=aw or 1,ax or#X;if ax-aw<1 then return X end;local ay=aw;for a=aw+1,ax do if X[a].tz<=X[ay].tz then if a==ay+1 then X[ay],X[ay+1]=X[ay+1],X[ay]else X[ay],X[ay+1],X[a]=X[a],X[ay],X[ay+1]end;ay=ay+1 end end;X=quicksort(X,aw,ay-1)return quicksort(X,ay+1,ax)end;function z_clip_line(h,i,j,k,l,m,az)if j>m then h,k=k,h;j,m=m,j;i,l=l,i end;if az>j and az<=m then alpha=abs((j-az)/(m-j))nx=lerp(h,k,alpha)ny=lerp(i,l,alpha)nz=lerp(j,m,alpha)return nx,ny,nz else return false end end;function project_point(t,y,u)return t*k_screen_scale/u+k_x_center,y*k_screen_scale/u+k_x_center end;function project_radius(aA,u)return aA*k_screen_scale/abs(u)end;function lerp(c,d,alpha)return c*(1.0-alpha)+d*alpha end;function init_player()player=new_object()player.min_x=-4.5;player.min_y=-4.5;player.min_z=-4.5;player.max_x=4.5;player.max_y=4.5;player.max_z=4.5;player.x=0;player.y=8;player.z=15 end;k_friction=.7;function update_camera()cam_x=player.x;cam_y=player.y;cam_z=player.z;cam_ax=player.ax;cam_ay=player.ay;cam_az=player.az;generate_cam_matrix_transform(cam_ax,cam_ay,cam_az)end;function init_3d()if is_init then return end;is_init=true;init_player()init_light()object_list={}obstacle_list={}end;function update_3d()for object in all(object_list)do update_visible(object)transform_object(object)cam_transform_object(object)update_light()end end;function draw_3d()triangle_list={}quicksort(object_list)start_timer()for object in all(object_list)do if object.visible and not object.background then render_object(object)end end;render_time=stop_timer()start_timer()quicksort(triangle_list)sort_time=stop_timer()start_timer()draw_triangle_list()triangle_time=stop_timer()end;function shade_trifill(w,x,aB,aC,aD,aE,aF,aG)local w=band(w,0xffff)local aB=band(aB,0xffff)local x=band(x,0xffff)local aC=band(aC,0xffff)local aD=band(aD,0xffff)local aE=band(aE,0xffff)local aH,aI;if x>aC then x,aC=aC,x;w,aB=aB,w end;if x>aE then x,aE=aE,x;w,aD=aD,w end;if aC>aE then aC,aE=aE,aC;aB,aD=aD,aB end;if not(x==aC)then local aJ=(aD-w)/(aE-x)local aK=(aB-w)/(aC-x)if x>0 then aH=w;aI=w;min_y=x else aH=w-aJ*x;aI=w-aK*x;min_y=0 end;max_y=min(aC,128)for y=min_y,max_y-1 do if band(y,1)==0 then rectfill(aH,y,aI,y,aF)else rectfill(aH,y,aI,y,aG)end;aH=aH+aJ;aI=aI+aK end else aH=w;aI=aB end;if not(aE==aC)then local aJ=(aD-w)/(aE-x)local aK=(aD-aB)/(aE-aC)min_y=aC;max_y=min(aE,128)if aC<0 then aI=aB-aK*aC;aH=w-aJ*x;min_y=0 end;for y=min_y,max_y do if band(y,1)==0 then rectfill(aH,y,aI,y,aF)else rectfill(aH,y,aI,y,aG)end;aI=aI+aK;aH=aH+aJ end else if band(y,1)==0 then rectfill(aH,aE,aI,aE,aF)else rectfill(aH,aE,aI,aE,aG)end end end;function start_timer()timer_value=stat(1)end;function stop_timer()return stat(1)-timer_value end;function camera()return player end;function add_value(aL,value)aL=aL+value end;return{init_player=init_player,update_player=update_player,update_camera=update_camera,handle_buttons=handle_buttons,init_3d=init_3d,update_3d=update_3d,draw_3d=draw_3d,read_vector_string=read_vector_string,read_face_string=read_face_string,load_object=load_object,matrix_inverse=matrix_inverse,camera_matrix_transform=camera_matrix_transform,rotate_point=rotate_point,camera=camera,project_point=project_point,intersect_bounding_box=intersect_bounding_box,delete_object=delete_object}
   end;
   ['ship'] = function()
     local Model
@@ -1687,7 +692,11 @@ end)({
     do
       local _class_0
       local _parent_0 = Model
-      local _base_0 = { }
+      local _base_0 = {
+        update = function(self, dt)
+          return _class_0.__parent.update(self, dt)
+        end
+      }
       _base_0.__index = _base_0
       setmetatable(_base_0, _parent_0.__base)
       _class_0 = setmetatable({
@@ -1748,8 +757,7 @@ end)({
           end
         end,
         update = function(self, dt)
-          self.projection = { }
-          self.projection.x, self.projection.y = engine.project_point(self.model.tx, self.model.ty, self.model.tz)
+          _class_0.__parent.update(self, dt)
           self:calc_direction()
           local speed = .004
           if (btn(pico.left)) then
@@ -1782,18 +790,20 @@ end)({
               self:set_children("ax", bound)
             end
           end
+          self:update_shoot(dt)
+          self:update_blink(dt)
           self:inc_children("x", self.x)
           self:inc_children("y", self.y)
-          local upper_bound = 13.5237
-          local lower_bound = -1.7895
+          local upper_bound = 16.5237
+          local lower_bound = -4.7895
           if (self.model.y > upper_bound) then
             self:set_children("y", upper_bound)
           end
           if (self.model.y < lower_bound) then
             self:set_children("y", lower_bound)
           end
-          upper_bound = 4
-          lower_bound = -4.3033
+          upper_bound = 7
+          lower_bound = -7.3033
           if (self.model.x > upper_bound) then
             self:set_children("x", upper_bound)
           end
@@ -1802,27 +812,23 @@ end)({
           end
         end,
         inc_children = function(self, key, increment)
-          for _, child in pairs(self.children) do
-            child:inc(key, increment)
-          end
+          return self:inc(key, increment)
         end,
         set_children = function(self, key, value)
-          for _, child in pairs(self.children) do
-            local offset = 0
-            if (self.defaults[key]) then
-              offset = -self.defaults[key]
-            end
-            child:set(key, value + offset)
-          end
+          return self:set(key, value)
         end,
         render = function(self, dt)
-          if (pico.is_held(pico.x_key)) then
-            return self:draw_holo()
+          self:render_shoot(dt)
+          if (btnp(pico.x_key)) then
+            return self:shoot()
           end
         end,
         draw_holo = function(self, x)
           if x == nil then
             x = -5
+          end
+          if (self.hidden) then
+            return 
           end
           pico.draw_sprite(40, self.projection.x + x, self.projection.y, 1, 1)
           pico.draw_sprite(40, self.projection.x + x, self.projection.y + 8, 1, 1)
@@ -1833,26 +839,87 @@ end)({
         end,
         direction_y = function(self)
           return self.y
+        end,
+        start_blink = function(self)
+          self.blink = true
+        end,
+        update_blink = function(self, dt)
+          if (self.blink) then
+            if (self.blink_count >= 2) then
+              if (self.game.score >= 3) then
+                self.game.score = self.game.score - 3
+              end
+              self:show()
+              self.blink = false
+              self.blink_time = 0
+              self.blink_count = 0
+              return 
+            end
+            self.blink_time = self.blink_time + dt
+            if (self.blink_time > 0.2) then
+              self:toggle()
+              sfx(2)
+              self.blink_time = 0
+              self.blink_count = self.blink_count + 1
+            end
+          end
+        end,
+        update_shoot = function(self, dt)
+          if (self.is_shooting) then
+            self.shoot_radius = self.shoot_radius - (dt * 3)
+            if (self.shoot_radius <= 1) then
+              self.is_shooting = false
+            end
+          end
+        end,
+        render_shoot = function(self, dt)
+          if (self.is_shooting) then
+            circ(self.shoot_location.x, self.shoot_location.y, self.shoot_radius, 8)
+            self.shoot_location.x = self.shoot_location.x - (0.1 * self.shoot_location.direction_x)
+            self.shoot_location.y = self.shoot_location.y - (0.1 * self.shoot_location.direction_y)
+          end
+        end,
+        shoot = function(self)
+          if (self.is_shooting or self.projection.x == 0) then
+            return 
+          end
+          local x, y = self.x * -100, self.y * -80
+          if (y < 7.21) then
+            y = y * 0.1
+          end
+          printh(y)
+          if (y <= 0) then
+            y = y - 20
+          else
+            y = y + 4
+          end
+          self.shoot_radius = 5
+          self.shoot_time = 0
+          self.shoot_location = {
+            x = self.projection.x + x,
+            y = self.projection.y + y,
+            direction_x = self.x,
+            direction_y = self.y
+          }
+          self.is_shooting = true
         end
       }
       _base_0.__index = _base_0
       setmetatable(_base_0, _parent_0.__base)
       _class_0 = setmetatable({
-        __init = function(self)
+        __init = function(self, game)
           _class_0.__parent.__init(self)
+          self.game = game
           self.front = .2498
           self.mid = -.07
           self.model.y = 5
+          self.model.z = -5
           self.model.ax = self.mid
           self.model.ay = self.front
-          self.children = {
-            self
-          }
-          self:set_defaults()
-          self.projection = {
-            x = 0,
-            y = 0
-          }
+          self.blink_time = 0
+          self.blink_count = 0
+          self.x, self.y = 0, 0
+          self.is_shooting = false
         end,
         __base = _base_0,
         __name = "Player",
@@ -1937,24 +1004,18 @@ end)({
     end
     local Stack
     Stack = require("stack").Stack
-    local Play
-    Play = require("play").Play
     local Menu
     Menu = require("menu").Menu
     pico = require("pico")
     _update60 = function()
-      pico.update_keys()
       return game_states:update(pico.step)
     end
     _draw = function()
       return game_states:render(pico.step)
     end
     pico.reset_pallet()
-    pico.init_keys()
     game_states = Stack()
-    game_states:push(Play(game_states))
-    game_states:push(Menu(game_states))
-    return game_states:create()
+    return game_states:push(Menu(game_states))
   end;
 })
 _init = function()
@@ -2009,24 +1070,18 @@ _init = function()
   end
   local Stack
   Stack = require("stack").Stack
-  local Play
-  Play = require("play").Play
   local Menu
   Menu = require("menu").Menu
   pico = require("pico")
   _update60 = function()
-    pico.update_keys()
     return game_states:update(pico.step)
   end
   _draw = function()
     return game_states:render(pico.step)
   end
   pico.reset_pallet()
-  pico.init_keys()
   game_states = Stack()
-  game_states:push(Play(game_states))
-  game_states:push(Menu(game_states))
-  return game_states:create()
+  return game_states:push(Menu(game_states))
 end
 __gfx__
 0000000077777777777777777777777777777777f0f00f0f00000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -2063,5 +1118,8 @@ __map__
 0000050505050606050505050500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000505050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __sfx__
-000200000c550065500a5500a550055500a550045500455005550065501a5001a50019500195001a5001a5001b5001c5001a500140000100015500185001f5000e5001a5001b5001a5001a5001a5001b50000000
-0002000005550075500755000000075501b5501c5501b550175501655015550155501655017550096500d65011650156501965022650286502c6502e650306503065004550055500655008550075500755007550
+0002000011550065500a5500a550055500a550045500455005550065501a5001a50019500195001a5001a5001b5001c5001a500140000100015500185001f5000e5001a5001b5001a5001a5001a5001b50000000
+000200002f0503705035050300502a0501e0500b05007050050500305003050060500105009050096500d65011650156501965022650286502c6502e650306503065004550055500655008550075500755007550
+00040000000000004014050130501205011050110501005010050100501105011050120501305012050000001100000000040000000001000000000d0000b000000000b0000b000000000a0000a0000b00000000
+0005000004150031501d150041502516006160201500e15002170191701d160121501f150201500e150051500e1500c1500a15009150091500b1500e15014150181500a150141500d1500d150131501315010150
+00080000371503f1500e1500515000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

@@ -98,6 +98,7 @@ class Player extends Ship
       @blink_time += dt
       if (@blink_time > 0.2) then
         @toggle!
+        sfx(2)
         @blink_time = 0
         @blink_count += 1
 
