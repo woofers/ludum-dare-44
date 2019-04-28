@@ -118,7 +118,7 @@ class Player extends Ship
     x, y = @x * -100, @y * -80
     if (y < 7.21) then
       y *= 0.1
-    @shoot_radius = 6
+    @shoot_radius = 5
     @shoot_time = 0
     @shoot_location = {x: @projection.x + x, y: @projection.y + y, direction_x: @x, direction_y: @y}
     @is_shooting = true
