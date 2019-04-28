@@ -34,7 +34,7 @@ function read_vector()
         text=sub(cur_string,cur_string_index,cur_string_index+4)
         value=read_2byte_fixed(text)
         v[i]=value
-        cur_string_index+=4
+        cur_string_index = cur_string_index + 4
     end
     return v
 end
@@ -45,7 +45,7 @@ function read_face()
         text=sub(cur_string,cur_string_index,cur_string_index+2)
         value=read_byte(text)
         f[i]=value
-        cur_string_index+=2
+        cur_string_index = cur_string_index + 2
     end
     return f
 end
@@ -230,12 +230,12 @@ end
 
 function    vector_cross_3d(px,py,pz,ax,ay,az,bx,by,bz)
 
-     ax-=px
-     ay-=py
-     az-=pz
-     bx-=px
-     by-=py
-     bz-=pz
+    ax = ax - px
+    ay = ay - py
+    az = az - pz
+    bx = bx - px
+    by = by - py
+    bz = bz - pz
 
 
     local dx=ay*bz-az*by
@@ -318,7 +318,7 @@ function load_object(object_vertices,object_faces,x,y,z,ax,ay,az,obstacle,color_
 
     object.obstacle = obstacle or false
 
-    if(obstacle)add(obstacle_list,object)
+    if(obstacle) then add(obstacle_list,object) end
 
     if(color_mode==k_colorize_static or color_mode==k_colorize_dynamic or color_mode==k_multi_color_static )then
         color_faces(object,color)
@@ -444,9 +444,9 @@ function cam_transform_object(object)
         for i=1, #object.vertices do
             local vertex=object.t_vertices[i]
 
-            vertex[1]+=object.x - cam_x
-            vertex[2]+=object.y - cam_y
-            vertex[3]+=object.z - cam_z
+            vertex[1] = vertex[1] + (object.x - cam_x)
+            vertex[2] = vertex[2] + (object.y - cam_y)
+            vertex[3] = vertex[3] + (object.z - cam_z)
 
             vertex[1],vertex[2],vertex[3]=rotate_cam_point(vertex[1],vertex[2],vertex[3])
 
@@ -582,7 +582,7 @@ function render_object(object)
 
 
 
-        if(object.background==true) z_paint-=1000
+        if(object.background==true) then z_paint = z_paint - 1000 end
         face[6]=z_paint
 
 
@@ -603,8 +603,12 @@ function render_object(object)
                             if(object.color_mode==k_colorize_dynamic)then
                                 --nx,ny,nz = vector_cross_3d(p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z)
                                 --save a bit on dynamic rendering by moving this funciton inline
-                                p2x-=p1x p2y-=p1y p2z-=p1z
-                                p3x-=p1x p3y-=p1y p3z-=p1z
+                                p2x = p2x-p1x
+                                p2y = p2y-p1y
+                                p2z = p2z-p1z
+                                p3x = p3x-p1x
+                                p3y = p3y-p1y
+                                p3z = p3z-p1z
                                 local nx = p2y*p3z-p2z*p3y
                                 local ny = p2z*p3x-p2x*p3z
                                 local nz = p2x*p3y-p2y*p3x
@@ -613,7 +617,9 @@ function render_object(object)
                                 --save a bit by moving this function inline
                                 nx=shl(nx,2) ny=shl(ny,2) nz=shl(nz,2)
                                 local inv_dist=1/sqrt(nx*nx+ny*ny+nz*nz)
-                                nx*=inv_dist ny*=inv_dist nz*=inv_dist
+                                nx=nx*inv_dist
+                                ny=ny*inv_dist
+                                nz=nz*inv_dist
 
 
                                 --b = vector_dot_3d(nx,ny,nz,t_light_x,t_light_y,t_light_z)
@@ -698,9 +704,9 @@ function render_object(object)
 end
 
 function three_point_sort(p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z)
-    if(p1z>p2z) p1z,p2z = p2z,p1z p1x,p2x = p2x,p1x p1y,p2y = p2y,p1y
-    if(p1z>p3z) p1z,p3z = p3z,p1z p1x,p3x = p3x,p1x p1y,p3y = p3y,p1y
-    if(p2z>p3z) p2z,p3z = p3z,p2z p2x,p3x = p3x,p2x p2y,p3y = p3y,p2y
+    if(p1z>p2z) then p1z,p2z = p2z,p1z p1x,p2x = p2x,p1x p1y,p2y = p2y,p1y end
+    if(p1z>p3z) then p1z,p3z = p3z,p1z p1x,p3x = p3x,p1x p1y,p3y = p3y,p1y end
+    if(p2z>p3z) then p2z,p3z = p3z,p2z p2x,p3x = p3x,p2x p2y,p3y = p3y,p2y end
 
     return p1x,p1y,p1z,p2x,p2y,p2z,p3x,p3y,p3z
 end
@@ -857,7 +863,7 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, color1, color2)
             x2,x3=x3,x2
           end
 
-         if(y1!=y2)then
+         if(not (y1==y2))then
             local delta_sx=(x3-x1)/(y3-y1)
             local delta_ex=(x2-x1)/(y2-y1)
 
@@ -877,8 +883,8 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, color1, color2)
 
             --rectfill(nsx,y,nex,y,color1)
             if(band(y,1)==0)then rectfill(nsx,y,nex,y,color1) else rectfill(nsx,y,nex,y,color2) end
-            nsx+=delta_sx
-            nex+=delta_ex
+            nsx = nsx + delta_sx
+            nex = nex + delta_ex
             end
 
         else --where top edge is horizontal
@@ -887,7 +893,7 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, color1, color2)
         end
 
 
-        if(y3!=y2)then
+        if(not (y3==y2))then
             local delta_sx=(x3-x1)/(y3-y1)
             local delta_ex=(x3-x2)/(y3-y2)
 
@@ -903,8 +909,8 @@ function shade_trifill( x1,y1,x2,y2,x3,y3, color1, color2)
 
                 --rectfill(nsx,y,nex,y,color1)
                 if(band(y,1)==0)then rectfill(nsx,y,nex,y,color1) else rectfill(nsx,y,nex,y,color2) end
-                nex+=delta_ex
-                nsx+=delta_sx
+                nex = nex + delta_ex
+                nsx = nsx + delta_sx
              end
 
         else --where bottom edge is horizontal
@@ -924,6 +930,10 @@ end
 
 function camera()
     return player
+end
+
+function add_value(var, value)
+    var = var + value
 end
 
 return {
