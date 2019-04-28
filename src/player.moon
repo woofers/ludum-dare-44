@@ -8,6 +8,7 @@ class Player extends Ship
     @front = .2498
     @mid = -.07
     @model.y = 5
+    @model.z = -5
     @model.ax = @mid
     @model.ay = @front
     @children = {self}
