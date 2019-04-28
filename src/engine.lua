@@ -368,10 +368,6 @@ function new_object()
     object.y=0
     object.z=0
 
-    object.rx=0
-    object.ry=0
-    object.rz=0
-
     object.tx=0
     object.ty=0
     object.tz=0
@@ -386,9 +382,7 @@ function new_object()
     object.sradius=10
     object.visible=true
 
-    object.render=true
     object.background=false
-    object.ring=false
 
     object.min_x=100
     object.min_y=100
@@ -397,10 +391,6 @@ function new_object()
     object.max_x=-100
     object.max_y=-100
     object.max_z=-100
-
-    object.vx=0
-    object.vy=0
-    object.vz=0
 
     add(object_list,object)
     return object
@@ -784,10 +774,6 @@ function init_player()
     player.x=0
     player.y=8
     player.z=15
-
-    player.vx=0
-    player.vy=0
-    player.vz=0
 end
 
 k_friction=.7

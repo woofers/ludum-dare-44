@@ -11,12 +11,4 @@ class Holo extends Model
   update: (dt) =>
     @model.ay += 0.0025
 
-  hide: () =>
-    if (not @hidden) then @model.z -= 1000
-    @hidden = true
-
-  show: () =>
-    if (@hidden) then @model.z += 1000
-    @hidden = false
-
 {:Holo}

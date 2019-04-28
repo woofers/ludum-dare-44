@@ -52,12 +52,6 @@ keys={}
 is_held = (k) ->
   band(keys[k], 1) == 1
 
-is_pressed = (k) ->
-  band(keys[k], 2) == 2
-
-is_released = (k) ->
-  band(keys[k], 4) == 4
-
 update_key = (k) ->
   if keys[k] == 0 then
     if btn(k) then keys[k] = 3
@@ -98,8 +92,6 @@ update_keys = () ->
  :round,
  :mod,
  :is_held,
- :is_pressed,
- :is_released,
  :init_keys,
  :update_keys
 }

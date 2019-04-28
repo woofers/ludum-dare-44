@@ -25,4 +25,16 @@ class Model
   inc: (key, value) =>
     @model[key] += value
 
+  hide: () =>
+    if (not @hidden) then @model.z -= 1000
+    @hidden = true
+
+  show: () =>
+    if (@hidden) then @model.z += 1000
+    @hidden = false
+
+  toggle: () =>
+    if (@hidden) then @show!
+    else @hide!
+
 {:Model}
