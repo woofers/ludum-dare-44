@@ -17,6 +17,7 @@ class Menu
     @dir = 1
     @is_turning = false
     @turn_time = 0
+    if (not @game_over) then sfx(7)
 
   destroy: () =>
     if (@ship) then @ship\destroy!
