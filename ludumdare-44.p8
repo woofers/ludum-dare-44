@@ -31,9 +31,7 @@ end)({
     local x_key = 5
     local set_alpha_key
     set_alpha_key = function()
-      palt(0, false)
-      palt(11, true)
-      return palt(14, true)
+      return palt(0, false)
     end
     local reset_pallet
     reset_pallet = function()
@@ -158,37 +156,6 @@ end)({
       update_keys = update_keys
     }
   end;
-  ['gameobject'] = function()
-    local GameObject
-    do
-      local _class_0
-      local _base_0 = {
-        create = function(self) end,
-        destroy = function(self) end,
-        reset = function(self) end,
-        update = function(self, dt) end,
-        render = function(self, dt) end
-      }
-      _base_0.__index = _base_0
-      _class_0 = setmetatable({
-        __init = function(self) end,
-        __base = _base_0,
-        __name = "GameObject"
-      }, {
-        __index = _base_0,
-        __call = function(cls, ...)
-          local _self_0 = setmetatable({}, _base_0)
-          cls.__init(_self_0, ...)
-          return _self_0
-        end
-      })
-      _base_0.__class = _class_0
-      GameObject = _class_0
-    end
-    return {
-      GameObject = GameObject
-    }
-  end;
   ['stack'] = function()
     local Stack
     do
@@ -253,12 +220,9 @@ end)({
   end;
   ['sprite'] = function()
     require("pico")
-    local GameObject
-    GameObject = require("gameobject").GameObject
     local Sprite
     do
       local _class_0
-      local _parent_0 = GameObject
       local _base_0 = {
         set_location = function(self, x, y)
           self.x, self.y = x, y
@@ -308,31 +272,18 @@ end)({
         end
       }
       _base_0.__index = _base_0
-      setmetatable(_base_0, _parent_0.__base)
       _class_0 = setmetatable({
         __init = function(self, x, y, width, height)
           self.x, self.y, self.width, self.height = x, y, width, height
-          _class_0.__parent.__init(self)
           self.x = self.x or 0
           self.y = self.y or 0
           self:set_location(self.x, self.y)
           return self:set_scale(1, 1)
         end,
         __base = _base_0,
-        __name = "Sprite",
-        __parent = _parent_0
+        __name = "Sprite"
       }, {
-        __index = function(cls, name)
-          local val = rawget(_base_0, name)
-          if val == nil then
-            local parent = rawget(cls, "__parent")
-            if parent then
-              return parent[name]
-            end
-          else
-            return val
-          end
-        end,
+        __index = _base_0,
         __call = function(cls, ...)
           local _self_0 = setmetatable({}, _base_0)
           cls.__init(_self_0, ...)
@@ -340,9 +291,6 @@ end)({
         end
       })
       _base_0.__class = _class_0
-      if _parent_0.__inherited then
-        _parent_0.__inherited(_parent_0, _class_0)
-      end
       Sprite = _class_0
     end
     return {
@@ -359,7 +307,6 @@ end)({
       local _parent_0 = Sprite
       local _base_0 = {
         update = function(self, dt)
-          _class_0.__parent.update(self, dt)
           self.x = self.x + (self.direction.x * pico.random(0, 15))
           self.y = self.y + (self.direction.y * pico.random(0, 15))
           self.height = pico.random(0, 2)
@@ -377,7 +324,6 @@ end)({
           end
         end,
         render = function(self, dt)
-          _class_0.__parent.render(self, dt)
           return pico.draw_rectangle(self.x, self.y, self.width, self.height, self.color)
         end
       }
@@ -502,14 +448,11 @@ end)({
     }
   end;
   ['model'] = function()
-    local GameObject
-    GameObject = require("gameobject").GameObject
     engine = require("engine")
     require("pico")
     local Model
     do
       local _class_0
-      local _parent_0 = GameObject
       local _base_0 = {
         set_defaults = function(self)
           self.defaults = { }
@@ -529,7 +472,6 @@ end)({
         end
       }
       _base_0.__index = _base_0
-      setmetatable(_base_0, _parent_0.__base)
       _class_0 = setmetatable({
         __init = function(self, v, f, color)
           self.color = color
@@ -539,20 +481,9 @@ end)({
           return self:set_defaults()
         end,
         __base = _base_0,
-        __name = "Model",
-        __parent = _parent_0
+        __name = "Model"
       }, {
-        __index = function(cls, name)
-          local val = rawget(_base_0, name)
-          if val == nil then
-            local parent = rawget(cls, "__parent")
-            if parent then
-              return parent[name]
-            end
-          else
-            return val
-          end
-        end,
+        __index = _base_0,
         __call = function(cls, ...)
           local _self_0 = setmetatable({}, _base_0)
           cls.__init(_self_0, ...)
@@ -560,9 +491,6 @@ end)({
         end
       })
       _base_0.__class = _class_0
-      if _parent_0.__inherited then
-        _parent_0.__inherited(_parent_0, _class_0)
-      end
       Model = _class_0
     end
     return {
@@ -570,13 +498,10 @@ end)({
     }
   end;
   ['menu'] = function()
-    local GameObject
-    GameObject = require("gameobject").GameObject
     require("pico")
     local Menu
     do
       local _class_0
-      local _parent_0 = GameObject
       local _base_0 = {
         create = function(self) end,
         destroy = function(self) end,
@@ -591,27 +516,14 @@ end)({
         end
       }
       _base_0.__index = _base_0
-      setmetatable(_base_0, _parent_0.__base)
       _class_0 = setmetatable({
         __init = function(self, game_states)
           self.game_states = game_states
-          return _class_0.__parent.__init(self)
         end,
         __base = _base_0,
-        __name = "Menu",
-        __parent = _parent_0
+        __name = "Menu"
       }, {
-        __index = function(cls, name)
-          local val = rawget(_base_0, name)
-          if val == nil then
-            local parent = rawget(cls, "__parent")
-            if parent then
-              return parent[name]
-            end
-          else
-            return val
-          end
-        end,
+        __index = _base_0,
         __call = function(cls, ...)
           local _self_0 = setmetatable({}, _base_0)
           cls.__init(_self_0, ...)
@@ -619,9 +531,6 @@ end)({
         end
       })
       _base_0.__class = _class_0
-      if _parent_0.__inherited then
-        _parent_0.__inherited(_parent_0, _class_0)
-      end
       Menu = _class_0
     end
     return {
@@ -629,8 +538,6 @@ end)({
     }
   end;
   ['play'] = function()
-    local GameObject
-    GameObject = require("gameobject").GameObject
     require("pico")
     engine = require("engine")
     local Player
@@ -642,7 +549,6 @@ end)({
     local Play
     do
       local _class_0
-      local _parent_0 = GameObject
       local _base_0 = {
         create = function(self)
           engine.init_3d()
@@ -650,6 +556,7 @@ end)({
           self.other = Ship(2)
           self.other.model.z = -25
           self.stars = Stars()
+          self.health = 1
         end,
         destroy = function(self) end,
         update = function(self, dt)
@@ -664,34 +571,56 @@ end)({
         render = function(self, dt)
           pico.bg(0)
           self.stars:render(dt)
-          engine.draw_3d()
           self.ship:render(dt)
-          print("life", 10, 3, 7)
-          return sspr(8, 0, 8 * 4, 8, 8, 10)
+          engine.draw_3d()
+          self.health = self.health - 0.01
+          self:draw_life()
+          return self:draw_abduct()
+        end,
+        draw_life = function(self, x, y, width, height)
+          if x == nil then
+            x = 8
+          end
+          if y == nil then
+            y = 10
+          end
+          if width == nil then
+            width = 32
+          end
+          if height == nil then
+            height = 8
+          end
+          local bar = (width - 4) * self.health
+          if (bar <= -1) then
+            bar = -1
+          end
+          print("life", x + 2, y - 7, 7)
+          pico.draw_rectangle(x, y, width, height, 7)
+          pico.draw_rectangle(x + 1, y + 1, width - 2, height - 2, 0)
+          if (bar > 0) then
+            return pico.draw_rectangle(x + 2, y + 2, bar, height - 4, 8)
+          end
+        end,
+        draw_abduct = function(self, x, y)
+          if x == nil then
+            x = 50
+          end
+          if y == nil then
+            y = 10
+          end
+          print("score", x + 2, y - 7, 7)
+          return print("123", x + 2, y, 7)
         end
       }
       _base_0.__index = _base_0
-      setmetatable(_base_0, _parent_0.__base)
       _class_0 = setmetatable({
         __init = function(self, game_states)
           self.game_states = game_states
-          return _class_0.__parent.__init(self)
         end,
         __base = _base_0,
-        __name = "Play",
-        __parent = _parent_0
+        __name = "Play"
       }, {
-        __index = function(cls, name)
-          local val = rawget(_base_0, name)
-          if val == nil then
-            local parent = rawget(cls, "__parent")
-            if parent then
-              return parent[name]
-            end
-          else
-            return val
-          end
-        end,
+        __index = _base_0,
         __call = function(cls, ...)
           local _self_0 = setmetatable({}, _base_0)
           cls.__init(_self_0, ...)
@@ -699,9 +628,6 @@ end)({
         end
       })
       _base_0.__class = _class_0
-      if _parent_0.__inherited then
-        _parent_0.__inherited(_parent_0, _class_0)
-      end
       Play = _class_0
     end
     return {
@@ -1098,11 +1024,6 @@ end)({
     
         object.render=true
         object.background=false
-        object.collision_x=true
-        object.collision_y=false
-        object.collision_down=false
-        object.collision_up=false
-        object.collision_left=false
         object.ring=false
     
         object.min_x=100
@@ -1117,8 +1038,6 @@ end)({
         object.vy=0
         object.vz=0
     
-        object.age=0
-        object.health=2
         add(object_list,object)
         return object
     
@@ -1669,72 +1588,8 @@ end)({
        matrix_inverse = matrix_inverse,
        camera_matrix_transform = camera_matrix_transform,
        rotate_point = rotate_point,
-       camera = camera
-    }
-  end;
-  ['holo'] = function()
-    local Model
-    Model = require("model").Model
-    require("pico")
-    local Holo
-    do
-      local _class_0
-      local _parent_0 = Model
-      local _base_0 = {
-        update = function(self, dt)
-          self.model.ay = self.model.ay + 0.0025
-        end,
-        hide = function(self)
-          if (not self.hidden) then
-            self.model.z = self.model.z - 1000
-          end
-          self.hidden = true
-        end,
-        show = function(self)
-          if (self.hidden) then
-            self.model.z = self.model.z + 1000
-          end
-          self.hidden = false
-        end
-      }
-      _base_0.__index = _base_0
-      setmetatable(_base_0, _parent_0.__base)
-      _class_0 = setmetatable({
-        __init = function(self)
-          _class_0.__parent.__init(self, "0003004afef80003063cfef8002b004afefc002b063cfefc0051004aff0a0051063cff0a0074004aff200074063cff200093004aff3e0093063cff3e00ac004aff6200ac063cff6200bf004aff8c00bf063cff8c00ca004affb900ca063cffb900ce004affe700ce063cffe700ca004a001600ca063c001600bf004a004300bf063c004300ac004a006d00ac063c006d0093004a00910093063c00910074004a00af0074063c00af0051004a00c50051063c00c5002b004a00d3002b063c00d30003004a00d70003063c00d7ffdc004a00d3ffdc063c00d3ffb6004a00c5ffb6063c00c5ff92004a00afff92063c00afff74004a0091ff74063c0091ff5a004a006dff5a063c006dff48004a0043ff48063c0043ff3c004a0016ff3c063c0016ff38004affe7ff38063cffe7ff3c004affb9ff3c063cffb9ff48004aff8cff48063cff8cff5a004aff62ff5a063cff62ff74004aff3eff74063cff3eff92004aff20ff92063cff20ffb6004aff0affb6063cff0affdc004afefcffdc063cfefc", "0203010405030607050809070a0b090c0d0b0e0f0d10110f1213111415131617151819171a1b191c1d1b1e1f1d20211f2223212425232627252829272a2b292c2d2b2e2f2d30312f3233313435333637353839373a3b393c3d3b3626163e3f3d40013f0f1f2f020403040605060807080a090a0c0b0c0e0d0e100f101211121413141615161817181a191a1c1b1c1e1d1e201f202221222423242625262827282a292a2c2b2c2e2d2e302f303231323433343635363837383a393a3c3b3c3e3d060402024006403e063e3c3a3a3836363432323036302e362e2c262c2a262a282626242222201e1e1c1a1a1816161412121016100e160e0c0a0a08063e3a063a3606262216221e161e1a160e0a160a0616362e260636163e403f4002013f010303050707090b0b0d070d0f070f111313150f15170f17191f191b1f1b1d1f1f212323252727292b2b2d2f2f313333353737393f393b3f3b3d3f3f03071f232f23272f272b2f2f333f33373f3f070f0f171f3f0f2f", 3)
-          self.model.y = -1
-          self.model.z = -3.5
-          return self:set_defaults()
-        end,
-        __base = _base_0,
-        __name = "Holo",
-        __parent = _parent_0
-      }, {
-        __index = function(cls, name)
-          local val = rawget(_base_0, name)
-          if val == nil then
-            local parent = rawget(cls, "__parent")
-            if parent then
-              return parent[name]
-            end
-          else
-            return val
-          end
-        end,
-        __call = function(cls, ...)
-          local _self_0 = setmetatable({}, _base_0)
-          cls.__init(_self_0, ...)
-          return _self_0
-        end
-      })
-      _base_0.__class = _class_0
-      if _parent_0.__inherited then
-        _parent_0.__inherited(_parent_0, _class_0)
-      end
-      Holo = _class_0
-    end
-    return {
-      Holo = Holo
+       camera = camera,
+       project_point = project_point
     }
   end;
   ['ship'] = function()
@@ -1789,8 +1644,6 @@ end)({
   ['player'] = function()
     local Ship
     Ship = require("ship").Ship
-    local Holo
-    Holo = require("holo").Holo
     engine = require("engine")
     require("pico")
     local Player
@@ -1806,8 +1659,9 @@ end)({
           end
         end,
         update = function(self, dt)
+          self.projection = { }
+          self.projection.x, self.projection.y = engine.project_point(self.model.tx, self.model.ty, self.model.tz)
           self:calc_direction()
-          self.holo:update(dt)
           local speed = .004
           if (btn(pico.left)) then
             self:inc_children("ay", -speed)
@@ -1839,11 +1693,6 @@ end)({
               self:set_children("ax", bound)
             end
           end
-          if (pico.is_held(pico.x_key)) then
-            self.holo:show()
-          else
-            self.holo:hide()
-          end
           self:inc_children("x", self.x)
           self:inc_children("y", self.y)
           local upper_bound = 13.5237
@@ -1871,24 +1720,29 @@ end)({
         set_children = function(self, key, value)
           for _, child in pairs(self.children) do
             local offset = 0
-            if (child == self) then
-              if (self.defaults[key]) then
-                offset = -self.defaults[key]
-              end
-            else
-              if (self.defaults[key]) then
-                offset = -self.defaults[key]
-              end
+            if (self.defaults[key]) then
+              offset = -self.defaults[key]
             end
             child:set(key, value + offset)
           end
         end,
         render = function(self, dt)
+          if (pico.is_held(pico.x_key)) then
+            self:draw_holo()
+          end
           print("X: " .. tostring(self.model.x), 17, 105, 9)
           print("Y: " .. tostring(self.model.y), 17, 110, 9)
           print("Z: " .. tostring(self.model.z), 17, 115, 9)
-          print("DX: " .. tostring(self.x), 75, 105, 9)
-          return print("DY: " .. tostring(self.y), 75, 110, 9)
+          print("PX: " .. tostring(self.projection.x), 75, 105, 9)
+          return print("PY: " .. tostring(self.projection.y), 75, 110, 9)
+        end,
+        draw_holo = function(self, x)
+          if x == nil then
+            x = -5
+          end
+          pico.draw_sprite(40, self.projection.x + x, self.projection.y, 1, 1)
+          pico.draw_sprite(40, self.projection.x + x, self.projection.y + 8, 1, 1)
+          return pico.draw_sprite(40, self.projection.x + x, self.projection.y + 16, 1, 1)
         end,
         direction_x = function(self)
           return self.x
@@ -1901,7 +1755,6 @@ end)({
       setmetatable(_base_0, _parent_0.__base)
       _class_0 = setmetatable({
         __init = function(self)
-          self.holo = Holo()
           _class_0.__parent.__init(self, 13)
           self.front = .2498
           self.mid = -.07
@@ -1909,10 +1762,13 @@ end)({
           self.model.ax = self.mid
           self.model.ay = self.front
           self.children = {
-            self,
-            self.holo
+            self
           }
-          return self:set_defaults()
+          self:set_defaults()
+          self.projection = {
+            x = 0,
+            y = 0
+          }
         end,
         __base = _base_0,
         __name = "Player",
@@ -2097,6 +1953,22 @@ __gfx__
 00700700708888888888888888888888888888070020070000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000000007000000000000000000000000000000700c0010000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000777777777777777777777777777777770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000003333331100000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000bbbb333100000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000003333331100000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000bbbb333100000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000003333331100000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000bbbb333100000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000003333331100000000000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000bbbb333100000000000000000000000000000000000000000000000000000000
 __map__
 0005050505050505000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0005050505050505050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

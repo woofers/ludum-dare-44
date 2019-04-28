@@ -1,18 +1,16 @@
 import Ship from require "ship"
-import Holo from require "holo"
 export engine = require "engine"
 require "pico"
 
 class Player extends Ship
   new: () =>
-    @holo = Holo!
     super(13)
     @front = .2498
     @mid = -.07
     @model.y = 5
     @model.ax = @mid
     @model.ay = @front
-    @children = {self, @holo}
+    @children = {self}
     @set_defaults!
     @projection = {x: 0, y: 0}
 
@@ -25,7 +23,6 @@ class Player extends Ship
     @projection = {}
     @projection.x, @projection.y = engine.project_point(@model.tx, @model.ty, @model.tz)
     @calc_direction!
-    @holo\update(dt)
     speed = .004
     if (btn(pico.left)) then
       @inc_children("ay", -speed)
@@ -51,11 +48,6 @@ class Player extends Ship
       if (@model.ax > bound) then
         @set_children("ax", bound)
 
-    if (pico.is_held(pico.x_key)) then
-      @holo\show!
-    else
-      @holo\hide!
-
     @inc_children("x", @x)
     @inc_children("y", @y)
     upper_bound = 13.5237
@@ -79,12 +71,18 @@ class Player extends Ship
       child\set(key, value + offset)
 
   render: (dt) =>
-    pico.draw_rectangle(@projection.x, @projection.y, 0, 0, 14)
+    if (pico.is_held(pico.x_key)) then
+      @draw_holo()
     print("X: #{@model.x}", 17, 105, 9)
     print("Y: #{@model.y}", 17, 110, 9)
     print("Z: #{@model.z}", 17, 115, 9)
     print("PX: #{@projection.x}", 75, 105, 9)
     print("PY: #{@projection.y}", 75, 110, 9)
+
+  draw_holo: (x=-5) =>
+    pico.draw_sprite(40, @projection.x + x, @projection.y, 1, 1)
+    pico.draw_sprite(40, @projection.x + x, @projection.y + 8, 1, 1)
+    pico.draw_sprite(40, @projection.x + x, @projection.y + 16, 1, 1)
 
   direction_x: () => @x
   direction_y: () => @y

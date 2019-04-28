@@ -13,8 +13,6 @@ x_key = 5
 
 set_alpha_key = () ->
   palt(0, false)
-  palt(11, true)
-  palt(14, true)
 
 reset_pallet = () ->
   pal()
