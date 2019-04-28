@@ -41,14 +41,12 @@ import Menu from require "menu"
 export pico = require "pico"
 
 export _update60 = () ->
-  pico.update_keys!
   game_states\update(pico.step)
 
 export _draw = () ->
   game_states\render(pico.step)
 
 pico.reset_pallet!
-pico.init_keys!
 
 export game_states = Stack!
 game_states\push(Menu(game_states))
