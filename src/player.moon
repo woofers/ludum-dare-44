@@ -49,6 +49,7 @@ class Player extends Ship
       if (@model.ax > bound) then
         @set_children("ax", bound)
 
+    @update_shoot(dt)
     @update_blink(dt)
     @inc_children("x", @x)
     @inc_children("y", @y)
@@ -72,13 +73,9 @@ class Player extends Ship
     print("Y: #{@model.y}", 17, 110, 9)
     print("Z: #{@model.z}", 17, 116, 9)
 
-
-    x, y = @x, @y
-    if (y < 7.21) then
-      y *= 0.1
-    pico.draw_rectangle(@projection.x + x * -100, @projection.y + y * -80, 0, 0, 9)
+    @render_shoot(dt)
     if (pico.is_held(pico.x_key)) then
-      @draw_holo()
+      @shoot!
 
   draw_holo: (x=-5) =>
     if (@hidden) return
@@ -105,5 +102,25 @@ class Player extends Ship
         @toggle!
         @blink_time = 0
         @blink_count += 1
+
+  update_shoot: (dt) =>
+    if (@is_shooting) then
+      @shoot_radius -= dt
+      if (@shoot_radius < 0) then
+        @is_shooting = false
+
+  render_shoot: (dt) =>
+    if (@is_shooting) then
+      circ(@shoot_location.x, @shoot_location.y, @shoot_radius, 8)
+
+  shoot: () =>
+    if (@is_shooting) return
+    x, y = @x * -100, @y * -80
+    if (y < 7.21) then
+      y *= 0.1
+    @shoot_radius = 5
+    @shoot_time = 0
+    @shoot_location = {x: @projection.x + x, y: @projection.y + y}
+    @is_shooting = true
 
 {:Player}
