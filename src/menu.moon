@@ -10,7 +10,11 @@ class Menu
     engine.init_3d!
     @ship = Ship!
     @ship.model.y = 7
+    @ship.model.z = -25
     @stars = Stars!
+    @dir = 1
+    @is_turning = false
+    @turn_time = 0
 
   destroy: () =>
     @ship\destroy!
@@ -20,13 +24,35 @@ class Menu
     @stars\update(dt)
     engine.update_camera!
     engine.update_3d!
-    @ship.model.ay += 0.01
+    if (not @is_turning) then
+      @ship.model.z += 0.5 * @dir
+    else
+      @ship.model.ay += 0.01
+      @turn_time += dt
+      if (@turn_time > .79) then
+        @turn_time = 0
+        @is_turning = false
+
+    printh(@time)
+
+    if (@ship.model.z > 2.249 and @dir == 1) then
+      @dir = -1
+      @is_turning = true
+    else if (@ship.model.z < -7 and @dir == -1) then
+      @dir = 1
+      @is_turning = true
+
 
   render: (dt) =>
     pico.bg(0)
     @stars\render(dt)
     engine.draw_3d!
 
-    print("alien expansion", 17, 105, 9)
+    @font("alien, E X P A N S I O N .", 17, 105)
+    @font("press, \151", 17, 20)
+
+  font: (text, x, y) =>
+    print(text, x, y, 13)
+    print(text, x + 1, y + 1, 7)
 
 {:Menu}
