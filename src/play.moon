@@ -64,12 +64,8 @@ class Play
 
   render: (dt) =>
     @stars\render(dt)
-    if (@ship.model.ax > .0274) then
-      engine.draw_3d!
-      @ship\render(dt)
-    else
-      @ship\render(dt)
-      engine.draw_3d!
+    @ship\render(dt)
+    engine.draw_3d!
     @draw_life!
     @draw_abduct!
 
