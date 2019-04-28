@@ -30,8 +30,12 @@ class Play
   render: (dt) =>
     pico.bg(0)
     @stars\render(dt)
-    @ship\render(dt)
-    engine.draw_3d!
+    if (@ship.model.ax > .0274) then
+      engine.draw_3d!
+      @ship\render(dt)
+    else
+      @ship\render(dt)
+      engine.draw_3d!
     @health -= 0.01
     @draw_life!
     @draw_abduct!
