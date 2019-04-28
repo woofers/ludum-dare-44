@@ -31,7 +31,6 @@ class Play
   update: (dt) =>
     for key, ship in pairs(@ships)
       ship.model.z += 0.1
-      printh(ship.model.z)
       if (engine.intersect_bounding_box(@ship.model, ship.model)) then
         @health -= 0.001
       if (ship.model.z > 10) then
