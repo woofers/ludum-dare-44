@@ -10,7 +10,6 @@ class Play
 
   create: () =>
     engine.init_3d!
-    @ship = Player!
     @ship_colors = {2, 4, 8, 9, 10, 11, 12, 13, 14}
     @ships = {}
     for i = 1, 2
@@ -18,6 +17,8 @@ class Play
       @ships[i].model.x = pico.random(-10, 10)
       @ships[i].model.y = pico.random(-10, 10)
       @ships[i].model.z = pico.random(-30, -25)
+      @ships[i]\set_defaults!
+    @ship = Player(@ships)
     @stars = Stars!
     @health = 1
 

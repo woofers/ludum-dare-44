@@ -3,14 +3,17 @@ export engine = require "engine"
 require "pico"
 
 class Player extends Ship
-  new: () =>
+  new: (ships) =>
     super(13)
+    @ships = ships
     @front = .2498
     @mid = -.07
     @model.y = 5
     @model.ax = @mid
     @model.ay = @front
     @children = {self}
+    for _, ship in pairs(@ships)
+      add(@children, ship)
     @set_defaults!
     @projection = {x: 0, y: 0}
 
@@ -61,14 +64,17 @@ class Player extends Ship
 
   inc_children: (key, increment) =>
     for _, child in pairs(@children)
-      child\inc(key, increment)
+      child\inc(key, increment * (if not child == self then -1 else 1))
 
   set_children: (key, value) =>
     for _, child in pairs(@children)
       offset = 0
+      scale = 1
       if (@defaults[key]) then
         offset = -@defaults[key]
-      child\set(key, value + offset)
+      if not child == self then
+        scale = -1
+      child\set(key, scale * value + offset)
 
   render: (dt) =>
     if (pico.is_held(pico.x_key)) then
