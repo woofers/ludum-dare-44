@@ -10,7 +10,7 @@ class Play
 
   create: () =>
     @ship = Player!
-    @ship_colors = {2, 4, 8, 9, 10, 11, 12, 13, 14}
+    @ship_colors = {2, 4, 8, 9, 10, 11, 12, 14}
     @ships = {}
     for i = 1, 2
       @new_ship(i)
