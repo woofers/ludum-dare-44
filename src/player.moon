@@ -17,7 +17,7 @@ class Player extends Ship
   calc_direction: () =>
     @x = -(@front - @model.ay)
     @y = @mid - @model.ax
-    if (@y > 0) then @y *= 3
+    if (@y > 0) then @y *= 4
 
   update: (dt) =>
     @projection = {}
