@@ -1,9 +1,9 @@
 {
-  "name": "ludumdare-44",
+  "name": "alien-expansion",
   "version": "0.0.1",
-  "author": "jaxson",
+  "author": "Jaxson Van Doorn",
   "main": "main.lua",
-  "description": "",
+  "description": "Ludum Dare 44 Game Contest Entry",
   "gfxDependencies": {},
   "dependencies": {
     "pico": "src/pico.moon",

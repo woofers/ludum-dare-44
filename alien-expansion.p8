@@ -1,8 +1,8 @@
 pico-8 cartridge // http://www.pico-8.com
 version 16
 __lua__
--- ludumdare-44 0.0.1
--- by jaxson
+-- alien-expansion 0.0.1
+-- by jaxson van doorn
 require = (function(requires)
   modules = {}
   return function(name)
