@@ -8,6 +8,8 @@ Game is built using [Lua](https://www.lua.org/) and [MoonScript](https://moonscr
 
 Entered as a [Ludum Dare 44](https://ldjam.com/events/ludum-dare/44) **compo** game.
 
+![img](./screenshots/cover.png "Cover")
+
 
 ## Instructions
 
@@ -40,8 +42,6 @@ Then build with `./build.sh` in the root of the project foler.  This will genera
 
 
 ## Screenshots
-
-![img](./screenshots/cover.png "Title Screen")
 
 ![img](./screenshots/game-1.png "Gameplay 1")
 

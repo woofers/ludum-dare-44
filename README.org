@@ -12,6 +12,10 @@ Game is built using [[https://www.lua.org/][Lua]] and [[https://moonscript.org/]
 
 Entered as a [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]] *compo* game.
 
+#+CAPTION: Cover
+#+NAME:    Cover
+[[./screenshots/cover.png]]
+
 ** Instructions
 
 Play as an alien bounty hunter attempting to amass a small fortune by capturing human manned ships using a state-of-the-art vortex laser.
@@ -38,10 +42,6 @@ In order to build a ~.p8~ file simply install ~p8~ and ~luamin~ using ~npm insta
 Then build with ~./build.sh~ in the root of the project foler.  This will generate a ~alien-expansion.p8~ file.
 
 ** Screenshots
-
-#+CAPTION: Title Screen
-#+NAME:    Title Screen
-[[./screenshots/cover.png]]
 
 #+CAPTION: Gameplay 1
 #+NAME:    Gameplay 1
