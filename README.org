@@ -12,6 +12,10 @@ Game is built using [[https://www.lua.org/][Lua]] and [[https://moonscript.org/]
 
 Entered as a [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]] *compo* game.
 
+*[[https://ldjam.com/events/ludum-dare/44/alien-e-x-p-a-n-s-i-o-n][Ludum Dare Page]]*
+
+*[[https://jaxson.vandoorn.ca/ludum-dare-44/][Play Game]]*
+
 #+CAPTION: Title Screen
 #+NAME:    Title Sreen
 [[./screenshots/title-screen.gif]]
