@@ -1,0 +1,34 @@
+
+#+TITLE:	ALIEN, e x p a n s i o n .
+#+AUTHOR:	Jaxson Van Doorn
+#+EMAIL:	jaxson.vandoorn@gmail.com
+#+OPTIONS:  num:nil toc:nil
+
+Small game created in under 48 hours for [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]] with the theme of *Your life is currency*.
+
+Game is built using [[https://www.lua.org/][Lua]] and [[https://moonscript.org/][MoonScript]], with the [[https://www.lexaloffle.com/pico-8.php][PICO-8]] Fantasy Console.
+
+Entered as a [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]] *compo* game.
+
+** Game Instructions
+
+Play as an alien attempting to further his research by capturing human manned ships using a vortex laser.  Be careful as hitting humans ships will deplete your life meter and detract from your score.
+
+However capturing a human will restore a small amount of life and the increase your score.  Additionally flying past human ships will also add to your score.
+
+Captrue as many ships as possible to achieve a high score.
+
+** Building
+This project uses [[https://github.com/jozanza/p8][p8]] to structure its source files.
+
+Additionally ~luamin~ to reduce the total [[https://www.lexaloffle.com/pico-8.php][PICO-8]] compressed cartridge size.
+
+In order to build a ~.p8~ file simply install ~p8~ and ~luamin~ using ~npm install -g p8 luamin~ .
+
+Then build with ~./build.sh~ in the root of the project foler.  This will generate a ~alien-expansion.p8~ file.
+
+** Screenshots
+
+#+CAPTION: Title Screen
+#+NAME:    Title Screen
+[[./screenshots/cover.png]]
