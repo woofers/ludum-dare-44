@@ -10,13 +10,17 @@ Game is built using [[https://www.lua.org/][Lua]] and [[https://moonscript.org/]
 
 Entered as a [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]] *compo* game.
 
-** Game Instructions
+** Instructions
 
-Play as an alien attempting to further his research by capturing human manned ships using a vortex laser.  Be careful as hitting humans ships will deplete your life meter and detract from your score.
+Play as an alien bounty hunter attempting to amass a small fortune by capturing human manned ships using a state-of-the-art vortex laser.
+
+You will be payed by some of the galaxies top scientists who aim to study these humans.
+
+Be careful as hitting human ships will deplete your life meter and more importantly will lead to unwarranted attention and hence will detract from your score/pay.
 
 However capturing a human will restore a small amount of life and the increase your score.  Additionally flying past human ships will also add to your score.
 
-Captrue as many ships as possible to achieve a high score.
+Capture as many ships as possible to achieve a high payday and satisfy the scientists.
 
 ** Building
 This project uses [[https://github.com/jozanza/p8][p8]] to structure its source files.
