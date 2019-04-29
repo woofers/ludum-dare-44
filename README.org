@@ -12,9 +12,9 @@ Game is built using [[https://www.lua.org/][Lua]] and [[https://moonscript.org/]
 
 Entered as a [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]] *compo* game.
 
-#+CAPTION: Cover
-#+NAME:    Cover
-[[./screenshots/cover.png]]
+#+CAPTION: Title Screen
+#+NAME:    Title Sreen
+[[./screenshots/title-screen.gif]]
 
 ** Instructions
 

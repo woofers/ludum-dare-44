@@ -8,7 +8,7 @@ Game is built using [Lua](https://www.lua.org/) and [MoonScript](https://moonscr
 
 Entered as a [Ludum Dare 44](https://ldjam.com/events/ludum-dare/44) **compo** game.
 
-![img](./screenshots/cover.png "Cover")
+![img](./screenshots/title-screen.gif "Title Screen")
 
 
 ## Instructions
