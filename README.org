@@ -4,6 +4,8 @@
 #+EMAIL:	jaxson.vandoorn@gmail.com
 #+OPTIONS:  num:nil toc:nil
 
+* ALIEN, e x p a n s i o n .
+
 Small game created in under 48 hours for [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]] with the theme of *Your life is currency*.
 
 Game is built using [[https://www.lua.org/][Lua]] and [[https://moonscript.org/][MoonScript]], with the [[https://www.lexaloffle.com/pico-8.php][PICO-8]] Fantasy Console.
@@ -40,3 +42,15 @@ Then build with ~./build.sh~ in the root of the project foler.  This will genera
 #+CAPTION: Title Screen
 #+NAME:    Title Screen
 [[./screenshots/cover.png]]
+
+#+CAPTION: Gameplay 1
+#+NAME:    Gameplay 1
+[[./screenshots/game-1.png]]
+
+#+CAPTION: Gameplay 2
+#+NAME:    Gameplay 2
+[[./screenshots/game-2.png]]
+
+#+CAPTION: Gameplay 3
+#+NAME:    Gameplay 3
+[[./screenshots/game-3.png]]
