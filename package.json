@@ -1,0 +1,39 @@
+{
+  "name": "alien-expansion",
+  "version": "1.0.0",
+  "description": "Ludum Dare Game Jam Entry",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "License.txt",
+    "package.json",
+    "README.md"
+  ],
+  "scripts": {
+    "dist": "./export.sh",
+    "build": "./build.sh",
+    "clean": "rm -rf dist",
+    "test": "echo 'No tests'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/woofers/ludum-dare-44.git"
+  },
+  "keywords": [
+    "lua",
+    "moonscript",
+    "ludum-dare",
+    "pico-8",
+    "ship"
+  ],
+  "author": "Jaxson Van Doorn <jaxson.vandoorn@gmail.com>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/woofers/ludum-dare-44/issues"
+  },
+  "homepage": "https://github.com/woofers/ludum-dare-44#readme",
+  "dependencies": {
+    "luamin": "^1.0.4",
+    "p8": "0.0.6"
+  }
+}
