@@ -1,6 +1,6 @@
 {
   "name": "alien-expansion",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Ludum Dare Game Jam Entry",
   "main": "dist/index.js",
   "files": [
