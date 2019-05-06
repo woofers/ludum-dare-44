@@ -39,6 +39,7 @@ export rawget = (tbl, index) ->
 import Stack from require "stack"
 import Menu from require "menu"
 export pico = require "pico"
+require "export"
 
 export _update60 = () ->
   game_states\update(pico.step)
@@ -50,3 +51,5 @@ pico.reset_pallet!
 
 export game_states = Stack!
 game_states\push(Menu(game_states))
+
+to_html!
