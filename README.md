@@ -10,7 +10,9 @@ Entered as a [Ludum Dare 44](https://ldjam.com/events/ludum-dare/44) **compo** g
 
 **[Ludum Dare Page](https://ldjam.com/events/ludum-dare/44/alien-e-x-p-a-n-s-i-o-n)**
 
-**[Play Game](https://jaxson.vandoorn.ca/ludum-dare-44/)**
+**[Play Updated Game](https://jaxson.vandoorn.ca/projects/alien-expansion/)**
+
+**[Play Original Version](https://jaxson.vandoorn.ca/ludum-dare-44/)** entered in [Ludum Dare 44](https://ldjam.com/events/ludum-dare/44)
 
 ![img](./screenshots/title-screen.gif "Title Screen")
 
