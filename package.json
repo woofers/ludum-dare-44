@@ -11,7 +11,7 @@
     "README.md"
   ],
   "scripts": {
-    "dist": "./export.sh",
+    "dist": "yarn clean && ./export.sh",
     "build": "./build.sh",
     "clean": "rm -rf dist",
     "test": "echo 'No tests'"
