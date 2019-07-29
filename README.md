@@ -36,6 +36,7 @@ Capture as many ships as possible to achieve a high payday and satisfy the scien
 
 -   **Arrows Keys** - Control your ship
 -   **X Key** - Fire vortex laser / Advance menus
+-   **Z Key** - Change camera settings (menu)
 
 
 ## Building

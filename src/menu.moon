@@ -7,6 +7,7 @@ import Play from require "play"
 class Menu
   new: (@game_states) =>
     @game_over = false
+    @invert = true
 
   create: () =>
     engine.init_3d!
@@ -25,7 +26,9 @@ class Menu
   update: (dt) =>
     if (btn(pico.x_key)) then
       @game_over = true
-      @game_states\push(Play(@game_states))
+      @game_states\push(Play(@game_states, @invert))
+
+    if (btnp(pico.z_key)) then @invert = not @invert
 
     @stars\update(dt)
     engine.update_camera!
@@ -51,6 +54,8 @@ class Menu
   render: (dt) =>
     @stars\render(dt)
     engine.draw_3d!
+    inv = if @invert then "I N V E R T E D" else "N O R M A L"
+    @font("x axis: \142 #{inv}", 17, 10)
 
     text = if @game_over then "you, D I E D ." else "alien, E X P A N S I O N ."
     @font(text, 17, 105)

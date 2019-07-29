@@ -6,11 +6,11 @@ import Ship from require "ship"
 import Stars from require "stars"
 
 class Play
-  new: (@game_states) =>
+  new: (@game_states, @invert) =>
 
   create: () =>
     @health = 1
-    @ship = Player(self)
+    @ship = Player(self, @invert)
     @ship_colors = {2, 4, 8, 9, 10, 11, 12, 14}
     @score = 0
     @ships = {}
