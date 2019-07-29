@@ -7,6 +7,8 @@ import Play from require "play"
 class Menu
   new: (@game_states) =>
     @game_over = false
+    @invert = "yes"
+    @controls = false
 
   create: () =>
     engine.init_3d!
@@ -19,13 +21,23 @@ class Menu
     @turn_time = 0
     if (not @game_over) then sfx(7)
 
+  load_game: () =>
+    @game_states\push(Play(@game_states))
+
   destroy: () =>
-    if (@ship) then @ship\destroy!
 
   update: (dt) =>
-    if (btn(pico.x_key)) then
-      @game_over = true
-      @game_states\push(Play(@game_states))
+    if (btnp(pico.x_key)) then
+      if (@ship) then @ship\destroy!
+      if (@game_over) then
+        @\load_game!
+      else
+        @game_over = true
+        @controls = true
+
+    if (@controls and btnp(pico.z_key)) then
+      @invert = "no"
+
 
     @stars\update(dt)
     engine.update_camera!
@@ -52,9 +64,12 @@ class Menu
     @stars\render(dt)
     engine.draw_3d!
 
-    text = if @game_over then "you, D I E D ." else "alien, E X P A N S I O N ."
-    @font(text, 17, 105)
-    @font("press, \151", 17, 20)
+    if (@controls) then
+      @font("invert, X   A X I S ?: {@invert}", 17, 35)
+    else
+      text = if @game_over then "you, D I E D ." else "alien, E X P A N S I O N ."
+      @font(text, 17, 105)
+      @font("press, \151", 17, 20)
 
   font: (text, x, y) =>
     print(text, x, y, 13)
