@@ -3,8 +3,12 @@ export engine = require "engine"
 require "pico"
 
 class Player extends Ship
-  new: (game) =>
+  new: (game, invert) =>
     super!
+    @controls = { left: pico.left, right: pico.right }
+    if (not invert) then
+      @controls["left"] = pico.right
+      @controls["right"] = pico.left
     @game = game
     @front = .2498
     @mid = -.07
@@ -26,12 +30,12 @@ class Player extends Ship
     super\update(dt)
     @calc_direction!
     speed = .004
-    if (btn(pico.left)) then
+    if (btn(@controls["left"])) then
       @inc_children("ay", -speed)
       bound = .1703
       if (@model.ay < bound) then
         @set_children("ay", bound)
-    if (btn(pico.right)) then
+    if (btn(@controls["right"])) then
       @model.ay += speed
       @inc_children("ay", speed)
       bound = .3296
@@ -73,12 +77,6 @@ class Player extends Ship
     @render_shoot(dt)
     if (btnp(pico.x_key)) then
       @shoot!
-
-  draw_holo: (x=-5) =>
-    if (@hidden) return
-    pico.draw_sprite(40, @projection.x + x, @projection.y, 1, 1)
-    pico.draw_sprite(40, @projection.x + x, @projection.y + 8, 1, 1)
-    pico.draw_sprite(40, @projection.x + x, @projection.y + 16, 1, 1)
 
   direction_x: () => @x
   direction_y: () => @y
