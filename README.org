@@ -18,6 +18,8 @@ Entered as a [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]] *compo* g
 
 *[[https://jaxson.vandoorn.ca/ludum-dare-44/][Play Original Version]]* entered in [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]]
 
+*[[https://www.lexaloffle.com/bbs/?tid=34861][Lexaloffle BBS Page]]*
+
 #+CAPTION: Title Screen
 #+NAME:    Title Sreen
 [[./screenshots/title-screen.gif]]

@@ -14,6 +14,8 @@ Entered as a [Ludum Dare 44](https://ldjam.com/events/ludum-dare/44) **compo** g
 
 **[Play Original Version](https://jaxson.vandoorn.ca/ludum-dare-44/)** entered in [Ludum Dare 44](https://ldjam.com/events/ludum-dare/44)
 
+**[Lexaloffle BBS Page](https://www.lexaloffle.com/bbs/?tid=34861)**
+
 ![img](./screenshots/title-screen.gif "Title Screen")
 
 
