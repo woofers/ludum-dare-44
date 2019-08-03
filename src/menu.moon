@@ -58,11 +58,11 @@ class Menu
     @font("x axis: \142 #{inv}", 17, 10)
 
     text = if @game_over then "you, D I E D ." else "alien, E X P A N S I O N ."
-    @font(text, 17, 105)
-    @font("press, \151", 17, 20)
+    @font(text, 17, 105, true)
+    @font("press, \151", 17, 20, true)
 
-  font: (text, x, y) =>
+  font: (text, x, y, full) =>
     print(text, x, y, 13)
-    print(text, x + 1, y + 1, 7)
+    if (full) then print(text, x + 1, y + 1, 7)
 
 {:Menu}
