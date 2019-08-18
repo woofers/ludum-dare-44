@@ -24,6 +24,10 @@ Entered as a [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]] *compo* g
 #+NAME:    Title Sreen
 [[./screenshots/title-screen.gif]]
 
+#+CAPTION: Ludum Dare Results
+#+NAME:    Ludum Dare Results
+https://badges.vandoorn.ca/44/alien-e-x-p-a-n-s-i-o-n/badge.svg
+
 ** Instructions
 
 Play as an alien bounty hunter attempting to amass a small fortune by capturing human manned ships using a state-of-the-art vortex laser.
