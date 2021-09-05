@@ -14,9 +14,9 @@ Entered as a [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]] *compo* g
 
 *[[https://ldjam.com/events/ludum-dare/44/alien-e-x-p-a-n-s-i-o-n][Ludum Dare Page]]*
 
-*[[https://jaxson.vandoorn.ca/projects/ludum-dare-44/play/][Play Updated Game]]*
+*[[https://jaxs.onl/projects/ludum-dare-44/play/][Play Updated Game]]*
 
-*[[https://jaxson.vandoorn.ca/ludum-dare-44/][Play Original Version]]* entered in [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]]
+*[[https://jaxs.onl/ludum-dare-44/][Play Original Version]]* entered in [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]]
 
 *[[https://www.lexaloffle.com/bbs/?tid=34861][Lexaloffle BBS Page]]*
 
@@ -26,7 +26,7 @@ Entered as a [[https://ldjam.com/events/ludum-dare/44][Ludum Dare 44]] *compo* g
 
 #+CAPTION: Ludum Dare Results
 #+NAME:    Ludum Dare Results
-https://badges.vandoorn.ca/44/alien-e-x-p-a-n-s-i-o-n/badge.svg
+https://badges.jaxs.onl/44/alien-e-x-p-a-n-s-i-o-n/badge.svg
 
 ** Instructions
 
