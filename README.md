@@ -18,7 +18,7 @@ Entered as a [Ludum Dare 44](https://ldjam.com/events/ludum-dare/44) **compo** g
 
 ![img](./screenshots/title-screen.gif "Title Screen")
 
-<img class="rounded-lg mt-2 mb-4 mx-auto" alt="Ludum Dare Results" src="https://badges.jaxs.onl/44/alien-e-x-p-a-n-s-i-o-n/badge.svg" width="454" height="363">
+<img class="rounded-lg mt-2 mb-4 mx-auto" alt="Ludum Dare Results" src="https://badges.jaxs.onl/44/alien-e-x-p-a-n-s-i-o-n/badge.svg" width="454" height="363" />
 
 
 ## Instructions
